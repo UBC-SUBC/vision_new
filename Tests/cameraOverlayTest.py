@@ -51,12 +51,15 @@ start_time = dt.datetime.now()
 
 
 # Wait indefinitely until the user terminates the script
-while True:
-    camera.annotate_text = "Hello world   " + dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')      # updates to current time
+try: 
+    while True:
+        camera.annotate_text = "Hello world   " + dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')      # updates to current time
 
 
 
 
 
 
-    sleep(1)
+        sleep(1)
+except KeyboardInterrupt:
+    pass

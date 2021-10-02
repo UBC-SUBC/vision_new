@@ -33,5 +33,9 @@ with picamera.PiCamera() as camera:
     o.layer = 3
 
     # Wait indefinitely until the user terminates the script
+#try:
     while True:
         sleep(1)
+#runs overlay until keyboard interrup occurs, ctrl+c
+#except KeyboardInterrupt:
+#    pass

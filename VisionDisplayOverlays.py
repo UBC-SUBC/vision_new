@@ -16,6 +16,7 @@ import json
 # changing variables based on raspi
 path = '/media/usb3/'  # usb path to save files
 serialPiPort = '/dev/ttyACM0'
+#serialPiPort = '/dev/ttyUSB0'
 imagePath = "/home/pi/Desktop/vision/"  # images path on pi
 
 #setup display variables
@@ -199,10 +200,12 @@ def SerielOverlay():
     #movingoverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
     movingoverlay.update(movingIM.tobytes())
 
-
-while True: 
-    #check status on of the button
-    SwitchStatus()
-    SerielOverlay()
-
+try:
+    while True: 
+        #check status on of the button
+        SwitchStatus()
+        SerielOverlay()
+#break when key pressed
+except KeyboardInterrupt:
+    pass
 
