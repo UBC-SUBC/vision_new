@@ -15,8 +15,7 @@ import json
 
 # changing variables based on raspi
 path = '/media/usb3/'  # usb path to save files
-#serialPiPort = '/dev/ttyACM0'
-serialPiPort = '/dev/ttyUSB0'
+serialPiPort = '/dev/ttyACM0'
 imagePath = "/home/pi/Desktop/vision/"  # images path on pi
 
 #setup display variables
@@ -37,7 +36,7 @@ buttonpin = 2
 
 #initial data values (pre serial)
 DataToDisplay = {'yaw':20, 'pitch':10, 'rpm':'100', 'speed':'2','depth':'2.5','battery':True}
-ErrorData = {'yaw':-1, 'pitch':-1, 'rpm':'-1', 'speed':'-1', 'depth':'-1','battery':False}
+
 #camera Setup
 camera = PiCamera()
 camera.led =True
@@ -156,18 +155,18 @@ def SerielOverlay():
     ending = bytes('}', 'utf-8')
     flag = 0
     while flag < 1:
+        line = ser.read_until(ending)
         try:
-            line = ser.read_until(ending)
             DataToDisplay = json.loads(line)
+            # configure data Values to display
+            ValuesText = "RPM:" + str(DataToDisplay['rpm']) + " rpm    Speed:" + str(
+                DataToDisplay['speed']) + " m/s     Depth:" + str(DataToDisplay['depth']) + "m"
+            pitchAjust = (DataToDisplay['pitch'] + pitchRange) / (pitchRange * 2)
+            yawAjust = (DataToDisplay['yaw'] + yawRange) / (yawRange * 2)
+            flag = 1
         except:
-            DataToDisplay = ErrorData
-    
-        # configure data Values to display
-        ValuesText = "RPM:" + str(DataToDisplay['rpm']) + " rpm    Speed:" + str(
-        DataToDisplay['speed']) + " m/s     Depth:" + str(DataToDisplay['depth']) + "m"
-        pitchAjust = (DataToDisplay['pitch'] + pitchRange) / (pitchRange * 2)
-        yawAjust = (DataToDisplay['yaw'] + yawRange) / (yawRange * 2)
-        flag = 1
+        
+            print("skipped json, unable to load")
             
 
     
@@ -197,15 +196,14 @@ def SerielOverlay():
     #update the overlay with the new image
     global movingOverlay
     #camera.remove_overlay(movingoverlay)
-    #movingOverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
-    movingOverlay.update(movingIM.tobytes())
+    #movingoverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
+    movingoverlay.update(movingIM.tobytes())
 
-try:
-    while True: 
-        #check status on of the button
-        SwitchStatus()
-        SerielOverlay()
-#break when key pressed
-except KeyboardInterrupt:
-    pass
+
+try
+	while True: 
+    		#check status on of the button
+    		SwitchStatus()
+    		SerielOverlay()
+
 
