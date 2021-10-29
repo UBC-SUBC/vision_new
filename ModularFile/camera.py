@@ -1,12 +1,17 @@
 from picamera import PiCamera
+from .variables import CameraVar
+
 
 class Camera:
-    screenX =  int(1280)
-    screenY =  int(720) #camera is also recording at this res
-    screenFramrate = 30
-    cam = PiCamera()
-    cam.led = True
-    cam.resolution = (screenX, screenY)
-    cam.framerate = screenFramrate
-    cam.vflip = True
-    cam.clock_mode="reset"
+    
+    def __init__(self) -> None:
+        cam = PiCamera()
+        self.initCam
+        
+        
+    def initCam(self):
+        self.cam.led = CameraVar.led
+        self.cam.resolution = CameraVar.resolution
+        self.cam.framerate = CameraVar.framerate
+        self.cam.vflip = CameraVar.vflip
+        self.clock_mode = CameraVar.clock_mode

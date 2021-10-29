@@ -1,18 +1,13 @@
 import serial
 import json
+from .variables import ArduinoVar
+
 
 class ArduinoConnector():
-    #serialPiPort = '/dev/ttyACM0'
-    serialPiPort = '/dev/ttyUSB0'
-    DataToDisplay = {'yaw':20, 'pitch':10, 'rpm':'100', 
-                    'speed':'2','depth':'2.5','battery':True}
-    ErrorData = {'yaw':-1, 'pitch':-1, 'rpm':'-1', 
-                'speed':'-1', 'depth':'-1','battery':False}
-    ending = bytes('}', 'utf-8')
     def __init__(self) -> None: 
         #serial setup
         ser=serial.Serial(
-        port=self.serialPiPort,
+        port=ArduinoVar.serialPiPort,
         baudrate = 9600,
         #    parity=serial.PARITY_NONE,
         #    stopbits=serial.STOPBITS_ONE,
@@ -26,7 +21,7 @@ class ArduinoConnector():
             line = self.ser.read_until(self.ending)
             DataToDisplay = json.loads(line)
         except:
-            DataToDisplay = self.ErrorData
+            DataToDisplay = ArduinoVar.ErrorData
         return DataToDisplay
         
 

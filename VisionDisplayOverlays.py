@@ -69,6 +69,7 @@ blankcanvas = Image.new('RGBA',(screenX,screenY))
 datafont = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",20)
 smalltextfont = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",8)
 
+#@TODO main switch
 #creaitng images for indicators
 WarningIM = Image.open(imagePath+"warning.png")
 WarningIM = WarningIM.resize([linegap*2,linegap*2])
@@ -79,6 +80,7 @@ RaceIM = RaceIM.resize([linegap*2,linegap*2])
 lightsIM = Image.open(imagePath+"highbeams.png")
 lightsIM = lightsIM.resize([linegap*2,linegap*2])
 
+#@TODO main switch
 #creating stationary image for bars and backgroungs
 pitchYawAxisIM = blankcanvas.copy()
 draw = ImageDraw.Draw(pitchYawAxisIM)
