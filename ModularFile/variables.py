@@ -1,4 +1,5 @@
 class ArduinoVar:
+    usbPath = '/media/usb3/'
     #serialPiPort = '/dev/ttyACM0'
     serialPiPort = '/dev/ttyUSB0'
     DataToDisplay = {'yaw':20, 'pitch':10, 'rpm':'100', 
@@ -7,7 +8,7 @@ class ArduinoVar:
                 'speed':'-1', 'depth':'-1','battery':False}
     ending = bytes('}', 'utf-8')
     
-    
+
     
 class CameraVar:
     screenX =  int(1280)
@@ -35,7 +36,6 @@ class DisplayVar:
     background = (0,0,0,80)
     yawRange = int(90)
     pitchRange = int(30)
-    buttonpin = 2
     datafontStyleLoc = "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf"
     datafontSize = 20
     smalltextfontStyle = "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf"
@@ -48,7 +48,7 @@ class ImageVar:
  
     
 class ButtonVar:
-    DataToButton = {'status':True, 'time':0}
     lights = True
     motors = False
+    buttonpin = 2
     
