@@ -1,4 +1,5 @@
 from gpiozero import Button
+import time
 import RPi.GPIO as GPIO
 from time import sleep
 import picamera
@@ -47,15 +48,18 @@ camera.vflip=True
 camera.clock_mode='reset'
 
 #serial setup
-ser=serial.Serial(
+try:
+    ser=serial.Serial(
     port=serialPiPort,
     baudrate = 9600,
 #    parity=serial.PARITY_NONE,
 #    stopbits=serial.STOPBITS_ONE,
 #    bytesize=serial.EIGHTBITS,
 #    timeout=1
-)
-ser.flush()
+    )
+    ser.flush()
+except:
+    ser = None
 
 #button setup
 statusbutton = Button(buttonpin)
@@ -199,6 +203,7 @@ def SerielOverlay():
     #camera.remove_overlay(movingoverlay)
     #movingOverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
     movingOverlay.update(movingIM.tobytes())
+    time.sleep(0.1)
 
 try:
     while True: 
