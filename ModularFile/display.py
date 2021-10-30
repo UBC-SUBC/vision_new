@@ -1,16 +1,15 @@
 from PIL import Image, ImageDraw, ImageFont
-from .variables import DisplayVar
+from variables import DisplayVar
 
 class Display:
     
-    def __init__(self) -> None:
-        canvas = Image.new('RGBA', (DisplayVar.screenX, DisplayVar.screenY))
-        datafont = ImageFont.truetype(Display.datafontStyleLoc,
-                                            DisplayVar.datafontSize)
-        smalltextFont = ImageFont.truetype(DisplayVar.smalltextfontStyle,
-                                           DisplayVar.smalltextfontSize)
-        draw = ImageDraw.Draw(canvas)
-
+    canvas = Image.new('RGBA', (DisplayVar.screenX, DisplayVar.screenY))
+    datafont = ImageFont.truetype(DisplayVar.datafontStyleLoc,
+                                        DisplayVar.datafontSize)
+    smalltextFont = ImageFont.truetype(DisplayVar.smalltextfontStyle,
+                                        DisplayVar.smalltextfontSize)
+    draw = ImageDraw.Draw(canvas)
+       
     def drawRectangle(self, x0, y0, x1, y1, fill):
         self.draw.rectangle([x0,y0, x1, y1], fill=fill)
 

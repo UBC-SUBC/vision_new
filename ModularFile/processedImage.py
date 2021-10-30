@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 from pathlib import Path
-from .variables import ImageVar
+from variables import ImageVar
 
 class ProcessedImage:
     
