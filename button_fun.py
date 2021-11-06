@@ -20,5 +20,5 @@ GPIO.add_event_detect(25, GPIO.RISING, callback=change_step, bouncetime=300)
 
 while True:
 	count = count + step
-	print(count + "\n")
+	print(str(count) + "\n")
 	time.sleep(1)
