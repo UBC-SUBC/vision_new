@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time
 
 GPIO.setmode(GPIO.BCM)
 
@@ -10,3 +11,4 @@ while True:
 	    print("Pin 22 is HIGH")
 	else:
 	    print("Pin 22 is LOW")
+    time.sleep(15)
