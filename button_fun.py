@@ -8,7 +8,7 @@ GPIO.setup(25, GPIO.IN)
 
 while True:
 	if GPIO.input(25):
-	    print("Pin 22 is HIGH")
+		print("Pin 22 is HIGH")
 	else:
-	    print("Pin 22 is LOW")
-    time.sleep(15)
+		print("Pin 22 is LOW")
+	time.sleep(15)
