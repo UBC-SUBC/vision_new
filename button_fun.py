@@ -12,8 +12,10 @@ GPIO.setup(25, GPIO.IN)
 
 def change_step (channel=channel):
 	global step
+	print("Entered callback")
 	if (step == 1): step = 2
-	else: step = 1
+	elif (step == 2): step = 1
+	else: step = step
 
 
 GPIO.add_event_detect(25, GPIO.RISING, callback=change_step, bouncetime=300)  
