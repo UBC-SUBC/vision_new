@@ -11,6 +11,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(25, GPIO.IN)
 
 def change_step (channel=channel):
+	global step
 	if (step == 1): step = 2
 	else: step = 1
 
