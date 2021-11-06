@@ -1,7 +1,7 @@
 class ArduinoVar:
     usbPath = '/media/usb3/'
-    #serialPiPort = '/dev/ttyACM0'
-    serialPiPort = '/dev/ttyUSB0'
+    serialPiPort = '/dev/ttyACM0'
+    #serialPiPort = '/dev/ttyUSB0'
     DataToDisplay = {'yaw':20, 'pitch':10, 'rpm':'100', 
                     'speed':'2','depth':'2.5','battery':True}
     ErrorData = {'yaw':-1, 'pitch':-1, 'rpm':'-1', 

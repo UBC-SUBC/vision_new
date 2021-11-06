@@ -1,9 +1,11 @@
 import serial
 import json
-from .variables import ArduinoVar
+from variables import ArduinoVar
 
 
-class ArduinoConnector():
+class ArduinoConnector:
+    ending = bytes('}', 'utf-8')
+    
     def __init__(self) -> None: 
         #serial setup
         ser=serial.Serial(
