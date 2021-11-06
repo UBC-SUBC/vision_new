@@ -11,4 +11,4 @@ while True:
 		print("Pin 22 is HIGH")
 	else:
 		print("Pin 22 is LOW")
-	time.sleep(15)
+	time.sleep(2)
