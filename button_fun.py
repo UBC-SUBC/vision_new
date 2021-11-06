@@ -1,6 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 
+step = 1
+channel = 25
+count = 0
+
+
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(25, GPIO.IN)
@@ -11,11 +16,6 @@ def change_step (channel=channel):
 
 
 GPIO.add_event_detect(25, GPIO.RISING, callback=change_step, bouncetime=300)  
-
-step = 1
-channel = 25
-count = 0
-
 
 
 while True:
