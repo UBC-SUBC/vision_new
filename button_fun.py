@@ -10,7 +10,7 @@ step = 1
 channel = 25;
 count = 0;
 
-def change_step (channel=channel)
+def change_step (channel=channel):
 	if (step == 1) step = 2
 	else step = 1
 
