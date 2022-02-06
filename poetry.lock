@@ -1,0 +1,180 @@
+[[package]]
+name = "flake8"
+version = "4.0.1"
+description = "the modular source code checker: pep8 pyflakes and co"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+mccabe = ">=0.6.0,<0.7.0"
+pycodestyle = ">=2.8.0,<2.9.0"
+pyflakes = ">=2.4.0,<2.5.0"
+
+[[package]]
+name = "mccabe"
+version = "0.6.1"
+description = "McCabe checker, plugin for flake8"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "numpy"
+version = "1.22.1"
+description = "NumPy is the fundamental package for array computing with Python."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
+name = "opencv-python"
+version = "4.5.5.62"
+description = "Wrapper package for OpenCV python bindings."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+numpy = [
+    {version = ">=1.21.2", markers = "python_version >= \"3.10\" or python_version >= \"3.6\" and platform_system == \"Darwin\" and platform_machine == \"arm64\""},
+    {version = ">=1.19.3", markers = "python_version >= \"3.6\" and platform_system == \"Linux\" and platform_machine == \"aarch64\" or python_version >= \"3.9\""},
+    {version = ">=1.14.5", markers = "python_version >= \"3.7\""},
+    {version = ">=1.17.3", markers = "python_version >= \"3.8\""},
+]
+
+[[package]]
+name = "pycodestyle"
+version = "2.8.0"
+description = "Python style guide checker"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "pyflakes"
+version = "2.4.0"
+description = "passive checker of Python programs"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "pyqt5"
+version = "5.15.6"
+description = "Python bindings for the Qt cross platform application toolkit"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+PyQt5-Qt5 = ">=5.15.2"
+PyQt5-sip = ">=12.8,<13"
+
+[[package]]
+name = "pyqt5-qt5"
+version = "5.15.2"
+description = "The subset of a Qt installation needed by PyQt5."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pyqt5-sip"
+version = "12.9.0"
+description = "The sip module support for PyQt5"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "40fae47a6ca34fdaf0be8a2b53fcba253e7eb99db287bbcf82500ee63172596c"
+
+[metadata.files]
+flake8 = [
+    {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
+    {file = "flake8-4.0.1.tar.gz", hash = "sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d"},
+]
+mccabe = [
+    {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
+    {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
+]
+numpy = [
+    {file = "numpy-1.22.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3d62d6b0870b53799204515145935608cdeb4cebb95a26800b6750e48884cc5b"},
+    {file = "numpy-1.22.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:831f2df87bd3afdfc77829bc94bd997a7c212663889d56518359c827d7113b1f"},
+    {file = "numpy-1.22.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8d1563060e77096367952fb44fca595f2b2f477156de389ce7c0ade3aef29e21"},
+    {file = "numpy-1.22.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:69958735d5e01f7b38226a6c6e7187d72b7e4d42b6b496aca5860b611ca0c193"},
+    {file = "numpy-1.22.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:45a7dfbf9ed8d68fd39763940591db7637cf8817c5bce1a44f7b56c97cbe211e"},
+    {file = "numpy-1.22.1-cp310-cp310-win_amd64.whl", hash = "sha256:7e957ca8112c689b728037cea9c9567c27cf912741fabda9efc2c7d33d29dfa1"},
+    {file = "numpy-1.22.1-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:800dfeaffb2219d49377da1371d710d7952c9533b57f3d51b15e61c4269a1b5b"},
+    {file = "numpy-1.22.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:65f5e257987601fdfc63f1d02fca4d1c44a2b85b802f03bd6abc2b0b14648dd2"},
+    {file = "numpy-1.22.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:632e062569b0fe05654b15ef0e91a53c0a95d08ffe698b66f6ba0f927ad267c2"},
+    {file = "numpy-1.22.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0d245a2bf79188d3f361137608c3cd12ed79076badd743dc660750a9f3074f7c"},
+    {file = "numpy-1.22.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:26b4018a19d2ad9606ce9089f3d52206a41b23de5dfe8dc947d2ec49ce45d015"},
+    {file = "numpy-1.22.1-cp38-cp38-win32.whl", hash = "sha256:f8ad59e6e341f38266f1549c7c2ec70ea0e3d1effb62a44e5c3dba41c55f0187"},
+    {file = "numpy-1.22.1-cp38-cp38-win_amd64.whl", hash = "sha256:60f19c61b589d44fbbab8ff126640ae712e163299c2dd422bfe4edc7ec51aa9b"},
+    {file = "numpy-1.22.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:2db01d9838a497ba2aa9a87515aeaf458f42351d72d4e7f3b8ddbd1eba9479f2"},
+    {file = "numpy-1.22.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:bcd19dab43b852b03868796f533b5f5561e6c0e3048415e675bec8d2e9d286c1"},
+    {file = "numpy-1.22.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:78bfbdf809fc236490e7e65715bbd98377b122f329457fffde206299e163e7f3"},
+    {file = "numpy-1.22.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c51124df17f012c3b757380782ae46eee85213a3215e51477e559739f57d9bf6"},
+    {file = "numpy-1.22.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:88d54b7b516f0ca38a69590557814de2dd638d7d4ed04864826acaac5ebb8f01"},
+    {file = "numpy-1.22.1-cp39-cp39-win32.whl", hash = "sha256:b5ec9a5eaf391761c61fd873363ef3560a3614e9b4ead17347e4deda4358bca4"},
+    {file = "numpy-1.22.1-cp39-cp39-win_amd64.whl", hash = "sha256:4ac4d7c9f8ea2a79d721ebfcce81705fc3cd61a10b731354f1049eb8c99521e8"},
+    {file = "numpy-1.22.1-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e60ef82c358ded965fdd3132b5738eade055f48067ac8a5a8ac75acc00cad31f"},
+    {file = "numpy-1.22.1.zip", hash = "sha256:e348ccf5bc5235fc405ab19d53bec215bb373300e5523c7b476cc0da8a5e9973"},
+]
+opencv-python = [
+    {file = "opencv-python-4.5.5.62.tar.gz", hash = "sha256:3efe232b32d5e1327e7c82bc6d61230737821c5190ce5c783e64a1bc8d514e18"},
+    {file = "opencv_python-4.5.5.62-cp36-abi3-macosx_10_15_x86_64.whl", hash = "sha256:2601388def0d6b957cc30dd88f8ff74a5651ae6940dd9e488241608cfa2b15c7"},
+    {file = "opencv_python-4.5.5.62-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:71fdc49df412b102d97f14927321309043c79c4a3582cce1dc803370ff9c39c0"},
+    {file = "opencv_python-4.5.5.62-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:130cc75d56b29aa3c5de8b6ac438242dd2574ba6eaa8bccdffdcfd6b78632f7f"},
+    {file = "opencv_python-4.5.5.62-cp36-abi3-win32.whl", hash = "sha256:3a75c7ad45b032eea0c72e389aac6dd435f5c87e87f60237095c083400bc23aa"},
+    {file = "opencv_python-4.5.5.62-cp36-abi3-win_amd64.whl", hash = "sha256:c463d2276d8662b972d20ca9644702188507de200ca5405b89e1fe71c5c99989"},
+    {file = "opencv_python-4.5.5.62-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:ac92e743e22681f30001942d78512c1e39bce53dbffc504e5645fdc45c0f2c47"},
+]
+pycodestyle = [
+    {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
+    {file = "pycodestyle-2.8.0.tar.gz", hash = "sha256:eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f"},
+]
+pyflakes = [
+    {file = "pyflakes-2.4.0-py2.py3-none-any.whl", hash = "sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e"},
+    {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
+]
+pyqt5 = [
+    {file = "PyQt5-5.15.6-cp36-abi3-macosx_10_13_x86_64.whl", hash = "sha256:33ced1c876f6a26e7899615a5a4efef2167c263488837c7beed023a64cebd051"},
+    {file = "PyQt5-5.15.6-cp36-abi3-manylinux1_x86_64.whl", hash = "sha256:9d6efad0377aa78bf081a20ac752ce86096ded18f04c592d98f5b92dc879ad0a"},
+    {file = "PyQt5-5.15.6-cp36-abi3-win32.whl", hash = "sha256:9d2dcdaf82263ae56023410a7af15d1fd746c8e361733a7d0d1bd1f004ec2793"},
+    {file = "PyQt5-5.15.6-cp36-abi3-win_amd64.whl", hash = "sha256:f411ecda52e488e1d3c5cce7563e1b2ca9cf0b7531e3c25b03d9a7e56e07e7fc"},
+    {file = "PyQt5-5.15.6.tar.gz", hash = "sha256:80343bcab95ffba619f2ed2467fd828ffeb0a251ad7225be5fc06dcc333af452"},
+]
+pyqt5-qt5 = [
+    {file = "PyQt5_Qt5-5.15.2-py3-none-macosx_10_13_intel.whl", hash = "sha256:76980cd3d7ae87e3c7a33bfebfaee84448fd650bad6840471d6cae199b56e154"},
+    {file = "PyQt5_Qt5-5.15.2-py3-none-manylinux2014_x86_64.whl", hash = "sha256:1988f364ec8caf87a6ee5d5a3a5210d57539988bf8e84714c7d60972692e2f4a"},
+    {file = "PyQt5_Qt5-5.15.2-py3-none-win32.whl", hash = "sha256:9cc7a768b1921f4b982ebc00a318ccb38578e44e45316c7a4a850e953e1dd327"},
+    {file = "PyQt5_Qt5-5.15.2-py3-none-win_amd64.whl", hash = "sha256:750b78e4dba6bdf1607febedc08738e318ea09e9b10aea9ff0d73073f11f6962"},
+]
+pyqt5-sip = [
+    {file = "PyQt5_sip-12.9.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:6d5bca2fc222d58e8093ee8a81a6e3437067bb22bc3f86d06ec8be721e15e90a"},
+    {file = "PyQt5_sip-12.9.0-cp310-cp310-manylinux1_x86_64.whl", hash = "sha256:d59af63120d1475b2bf94fe8062610720a9be1e8940ea146c7f42bb449d49067"},
+    {file = "PyQt5_sip-12.9.0-cp310-cp310-win32.whl", hash = "sha256:0fc9aefacf502696710b36cdc9fa2a61487f55ee883dbcf2c2a6477e261546f7"},
+    {file = "PyQt5_sip-12.9.0-cp310-cp310-win_amd64.whl", hash = "sha256:485972daff2fb0311013f471998f8ec8262ea381bded244f9d14edaad5f54271"},
+    {file = "PyQt5_sip-12.9.0-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:d85002238b5180bce4b245c13d6face848faa1a7a9e5c6e292025004f2fd619a"},
+    {file = "PyQt5_sip-12.9.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:83c3220b1ca36eb8623ba2eb3766637b19eb0ce9f42336ad8253656d32750c0a"},
+    {file = "PyQt5_sip-12.9.0-cp36-cp36m-win32.whl", hash = "sha256:d8b2bdff7bbf45bc975c113a03b14fd669dc0c73e1327f02706666a7dd51a197"},
+    {file = "PyQt5_sip-12.9.0-cp36-cp36m-win_amd64.whl", hash = "sha256:69a3ad4259172e2b1aa9060de211efac39ddd734a517b1924d9c6c0cc4f55f96"},
+    {file = "PyQt5_sip-12.9.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:42274a501ab4806d2c31659170db14c282b8313d2255458064666d9e70d96206"},
+    {file = "PyQt5_sip-12.9.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:6a8701892a01a5a2a4720872361197cc80fdd5f49c8482d488ddf38c9c84f055"},
+    {file = "PyQt5_sip-12.9.0-cp37-cp37m-win32.whl", hash = "sha256:ac57d796c78117eb39edd1d1d1aea90354651efac9d3590aac67fa4983f99f1f"},
+    {file = "PyQt5_sip-12.9.0-cp37-cp37m-win_amd64.whl", hash = "sha256:4347bd81d30c8e3181e553b3734f91658cfbdd8f1a19f254777f906870974e6d"},
+    {file = "PyQt5_sip-12.9.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:c446971c360a0a1030282a69375a08c78e8a61d568bfd6dab3dcc5cf8817f644"},
+    {file = "PyQt5_sip-12.9.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:fc43f2d7c438517ee33e929e8ae77132749c15909afab6aeece5fcf4147ffdb5"},
+    {file = "PyQt5_sip-12.9.0-cp38-cp38-win32.whl", hash = "sha256:055581c6fed44ba4302b70eeb82e979ff70400037358908f251cd85cbb3dbd93"},
+    {file = "PyQt5_sip-12.9.0-cp38-cp38-win_amd64.whl", hash = "sha256:c5216403d4d8d857ec4a61f631d3945e44fa248aa2415e9ee9369ab7c8a4d0c7"},
+    {file = "PyQt5_sip-12.9.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:a25b9843c7da6a1608f310879c38e6434331aab1dc2fe6cb65c14f1ecf33780e"},
+    {file = "PyQt5_sip-12.9.0-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:dd05c768c2b55ffe56a9d49ce6cc77cdf3d53dbfad935258a9e347cbfd9a5850"},
+    {file = "PyQt5_sip-12.9.0-cp39-cp39-win32.whl", hash = "sha256:4f8e05fe01d54275877c59018d8e82dcdd0bc5696053a8b830eecea3ce806121"},
+    {file = "PyQt5_sip-12.9.0-cp39-cp39-win_amd64.whl", hash = "sha256:b09f4cd36a4831229fb77c424d89635fa937d97765ec90685e2f257e56a2685a"},
+    {file = "PyQt5_sip-12.9.0.tar.gz", hash = "sha256:d3e4489d7c2b0ece9d203ae66e573939f7f60d4d29e089c9f11daa17cfeaae32"},
+]
