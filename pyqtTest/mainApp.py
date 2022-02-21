@@ -1,4 +1,5 @@
 from glob import glob
+from turtle import right
 import cv2
 import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication
@@ -6,10 +7,17 @@ from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot, QRect
 from PyQt5 import QtCore
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QPen, QFont
+from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMainWindow, QMenu, QAction, \
     qApp, QFileDialog, QHBoxLayout
+import logging
+from pathlib import Path
+import os
+
+from numpy import right_shift
+logging.basicConfig(level=logging.DEBUG)
+#@TODO make the logs function
 
 
 class Thread(QThread):
@@ -28,8 +36,10 @@ class Thread(QThread):
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
+                # print(contextPerserver.width, contextPerserver.height)
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height, Qt.KeepAspectRatio)
+                p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
+            
                 self.changePixmap.emit(p)
                 
 class App(QMainWindow):
@@ -38,6 +48,7 @@ class App(QMainWindow):
         self.title = 'SUBC Vision Feed'
         self.screen = QApplication.primaryScreen()
         self.videoLabel = videoFeed(self)
+    
         self.initUI()
         
         
@@ -52,16 +63,22 @@ class App(QMainWindow):
     def setImage(self, image):
         self.videoLabel.setPixmap(QPixmap.fromImage(image))
 
+        # self.videoLabel.setScaledContents(True)
+
     def initUI(self):
         self.setWindowTitle(self.title)
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
-
+        
         self.showMaximized()
         self.get_main_size()
         self.setUpVideoFeedUi()
-        
+    
+    def resizeEvent(self, event) -> None:
+        self.get_main_size()
+        self.videoLabel.resize(contextPerserver.width, contextPerserver.height)
+        return super().resizeEvent(event)
     
     def setUpVideoFeedUi(self):
         self.topRect = QRect(0, 0, contextPerserver.width, contextPerserver.height)
@@ -71,39 +88,111 @@ class App(QMainWindow):
 class videoFeed(QLabel):
     def __init__(self, parent=None):
         QLabel.__init__(self, parent)
+        self.height_scale = 0.02
+        self.width_scale = 0.99
+        self.left_quarter = contextPerserver.width * self.height_scale
+        self.right_quarter = contextPerserver.width * self.width_scale
+        self.up_quarter = contextPerserver.height * self.height_scale
+        self.down_quarter = contextPerserver.height * self.width_scale
+        self.top_mid_x = (self.left_quarter + self.right_quarter)/2
+        self.right_mid_y = (self.up_quarter + self.down_quarter)/2
+        self.center_square_width = 10
+        self.center_square_height = 30
+        self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
+        self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
+        # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         
-    def paintEvent(self, event):
-        QLabel.paintEvent(self, event)
-        painter = QPainter(self)
+        
+    def paintOpaque(self, painter):
+        painter.save()
+        self.top_height = self.up_quarter*3
+        right_x = contextPerserver.width-self.left_quarter*2
+        self.bot_height = contextPerserver.height -  self.top_height
+        painter.setOpacity(0.3)
+        painter.setBrush(QBrush(Qt.black))
+        painter.setPen(QPen(Qt.transparent))
+        painter.drawRect(QRect(0, 0, contextPerserver.width,self.top_height ))
+        painter.drawRect(QRect(right_x, self.top_height, contextPerserver.width, self.bot_height))
+        painter.drawRect(QRect(0, self.bot_height, right_x, contextPerserver.height))
+        painter.restore()
+        
+    def updateParams(self):
+        self.left_quarter = contextPerserver.width * self.height_scale
+        self.right_quarter = contextPerserver.width * self.width_scale
+        self.up_quarter = contextPerserver.height * self.height_scale
+        self.down_quarter = contextPerserver.height * self.width_scale
+        self.top_mid_x = (self.left_quarter + self.right_quarter)/2
+        self.right_mid_y = (self.up_quarter + self.down_quarter)/2
+        
+    def paintLines(self, painter):
+        painter.save()
         painter.setPen(QPen(Qt.green, 4))
-        # print(contextPerserver.height, contextPerserver.width)
-        left_quarter = contextPerserver.width * 0.04
- 
-        right_quarter = contextPerserver.width * 0.96
-        up_quarter = contextPerserver.height * 0.04
-        down_quarter = contextPerserver.height * 0.96
-        top_mid_x = (left_quarter + right_quarter)/2
-        right_mid_y = (up_quarter + down_quarter)/2
-        center_square_width = 20
-        center_square_height = 20
-        print(left_quarter, right_quarter)   
-        painter.drawLine(left_quarter, up_quarter, right_quarter, up_quarter)
-        painter.drawLine(right_quarter, up_quarter, right_quarter, down_quarter)
-        painter.fillRect(QRect(top_mid_x,up_quarter-(center_square_height/2), center_square_width, center_square_height), Qt.green)
-        painter.fillRect(QRect(right_quarter-(center_square_width/2),right_mid_y, center_square_width, center_square_height), Qt.green)
-        painter.setFont(QFont("times", 76))
-        painter.drawText(QRect(top_mid_x,up_quarter, top_mid_x +70, up_quarter), QtCore.Qt.AlignCenter ,"test")
-        # painter.setPen(Qt.blue)
-        # painter.drawRect(120,10,80,80)
+        painter.drawLine(self.left_quarter, self.up_quarter, self.right_quarter, self.up_quarter)
+        painter.drawLine(self.right_quarter, self.up_quarter, self.right_quarter, self.down_quarter)
+        painter.restore()
+    
+    def paintMidSquares(self, painter):
+        painter.save()
+        x_off_set = self.center_square_width * 0.5
+        y_off_set = self.center_square_height * 0.5
+        painter.setPen(QPen(Qt.green, 4))
+        painter.translate(-x_off_set, -y_off_set)
+        # painter.fillRect(QRect(top_mid_x,self.up_quarter-(center_square_height/2), center_square_width, center_square_height), Qt.green)
+        # painter.fillRect(QRect(self.right_quarter-(center_square_height/2),self.right_mid_y, center_square_height,center_square_width), Qt.green)
+        painter.fillRect(QRect(self.top_mid_x,self.up_quarter, self.center_square_width, self.center_square_height), Qt.green)
+        painter.resetTransform()
+        painter.translate(-y_off_set, -x_off_set)
+        painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
+        painter.restore()
+    
+    def paintText(self, painter):
+        painter.save()
+        painter.setPen(QPen(Qt.green, 4))
+        font_size = max(contextPerserver.width * contextPerserver.height / 69120, 16)
+        painter.setFont(QFont("times", font_size))
+        ###Draw the text
+        painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
+                         QtCore.Qt.AlignCenter , "yaw")
+        painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
+                         Qt.AlignCenter, "p\ni\nt\nc\nh")
+        
+        painter.setPen(QPen(Qt.blue,4))
+        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
+                         "RPM:31rpm     Speed:2m/s     Depth:3m")
 
-        # rectf = QRectF(230.0,10.0,80.0,80.0)
-        # painter.drawRoundedRect(rectf,20,20)
+        # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
+        # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
+        
+        painter.restore()
+    
+    def paintImages(self, painter):
+        self.battery_img = self.battery_img.scaled(contextPerserver.width*0.04, self.top_height)
+        painter.drawPixmap(contextPerserver.width*0.02,self.bot_height, QPixmap.fromImage(self.battery_img))
+        
+        self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
+        painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
+    
+    def paintEvent(self, event):
+        QLabel.paintEvent(self,event)
+        
+        self.updateParams()
+        painter = QPainter(self)
+        self.paintOpaque(painter)
+        self.paintLines(painter)
+        self.paintMidSquares(painter)
+        self.paintText(painter)
+        self.paintImages(painter)
+        print(self.left_quarter, self.right_quarter)
+        
 
-        # p1 = [QPoint(10,100),QPoint(220,110),QPoint(220,190)]
-        # painter.drawPolyline(QPolygon(p1))
 
-        # p2 = [QPoint(120,110),QPoint(220,110),QPoint(220,190)]
-        # painter.drawPolygon(QPolygon(p2))
+
+
+        
+        
+        # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
+        
+        
     
 
 
