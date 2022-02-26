@@ -18,6 +18,7 @@ import os
 from arduinoConnector import ArduinoConnector
 import datetime
 
+Path.mkdir("logs", parents=True, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG,
                     filename='logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p"))+'.txt',
                     filemode='a',
@@ -48,10 +49,11 @@ class Thread(QThread):
                 self.changePixmap.emit(p)
                 
 class App(QMainWindow):
-    def __init__(self):
+    def __init__(self, screensize):
         super().__init__()
         self.title = 'SUBC Vision Feed'
         self.screen = QApplication.primaryScreen()
+        self.windowsize = screensize
         self.videoLabel = videoFeed(self)
         self.initUI()
         
@@ -66,17 +68,18 @@ class App(QMainWindow):
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.videoLabel.setPixmap(QPixmap.fromImage(image))
-
         # self.videoLabel.setScaledContents(True)
 
     def initUI(self):
+        self.setFixedSize(self.windowsize)
+        self.setWindowFlags(Qt.CustomizeWindowHint | Qt.FramelessWindowHint)
         logging.info(msg = str(datetime.datetime.now()) + ' Initializing App UI')
         self.setWindowTitle(self.title)
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
         
-        self.showMaximized()
+        # self.showMaximized()
         self.get_main_size()
         self.setUpVideoFeedUi()
     
@@ -241,5 +244,6 @@ class contextPerserver():
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = App()
+    screensize = app.desktop().availableGeometry().size()
+    ex = App(screensize)
     sys.exit(app.exec_())
