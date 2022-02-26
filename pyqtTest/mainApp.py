@@ -91,6 +91,8 @@ class App(QMainWindow):
     
     
 class videoFeed(QLabel):
+    frame_count = int(0)
+    
     def __init__(self, parent=None):
         QLabel.__init__(self, parent)
         self.height_scale = 0.02
@@ -214,6 +216,10 @@ class videoFeed(QLabel):
         return False
     
     def paintEvent(self, event):
+        self.frame_count += 1
+        if frame_count == 30:
+            logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
+            frame_count = 0
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
         if self.checkTime():
