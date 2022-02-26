@@ -121,6 +121,7 @@ class videoFeed(QLabel):
         self.rpm = json["rpm"]
         self.speed = json["speed"]
         self.depth = json["depth"]
+        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
     
     def paintOpaque(self, painter):
