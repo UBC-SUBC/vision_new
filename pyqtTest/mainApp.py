@@ -19,7 +19,7 @@ from arduinoConnector import ArduinoConnector
 import datetime
 
 logging.basicConfig(level=logging.DEBUG,
-                    filename='/logs/logs.txt',
+                    filename='logs/logs.txt',
                     filemode='w')
 #@TODO make the logs function
 
@@ -69,7 +69,7 @@ class App(QMainWindow):
         # self.videoLabel.setScaledContents(True)
 
     def initUI(self):
-        logging.info(msg = str(datetime.datetime.now() + ' Initializing App UI'))
+        logging.info(msg = str(datetime.datetime.now()) + ' Initializing App UI')
         self.setWindowTitle(self.title)
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
