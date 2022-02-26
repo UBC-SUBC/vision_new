@@ -19,7 +19,7 @@ from arduinoConnector import ArduinoConnector
 import datetime
 
 logging.basicConfig(level=logging.DEBUG,
-                    filename='logs/logs.txt',
+                    filename='logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p"))+'.txt',
                     filemode='a',
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 #@TODO make the logs function
