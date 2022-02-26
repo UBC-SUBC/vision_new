@@ -1,4 +1,5 @@
 from glob import glob
+from time import time
 from turtle import right
 import cv2
 import sys
@@ -14,8 +15,9 @@ from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMain
 import logging
 from pathlib import Path
 import os
+from arduinoConnector import ArduinoConnector
+import datetime
 
-from numpy import right_shift
 logging.basicConfig(level=logging.DEBUG)
 #@TODO make the logs function
 
@@ -48,7 +50,6 @@ class App(QMainWindow):
         self.title = 'SUBC Vision Feed'
         self.screen = QApplication.primaryScreen()
         self.videoLabel = videoFeed(self)
-    
         self.initUI()
         
         
@@ -101,8 +102,23 @@ class videoFeed(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
+        self.arduino = ArduinoConnector()
+        self.yaw = 0
+        self.pitch = 0
+        self.rpm = "0.0"
+        self.speed = "0.0"
+        self.depth = "0.0"
+        self.timeBefore = datetime.datetime.now()
         
+    def getArduino(self):
+        json = self.arduino.readJsonFromArduino()
+        self.yaw = json["yaw"]
+        self.pitch = json["pitch"]
+        self.rpm = json["rpm"]
+        self.speed = json["speed"]
+        self.depth = json["depth"]
         
+    
     def paintOpaque(self, painter):
         painter.save()
         self.top_height = self.up_quarter*3
@@ -145,6 +161,19 @@ class videoFeed(QLabel):
         painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
         painter.restore()
     
+    def paintMovingSquares(self, painter):
+        painter.save()
+        x_off_set = self.center_square_width * 0.5
+        y_off_set = self.center_square_height * 0.5
+        painter.setPen(QPen(Qt.black, 4))
+        painter.translate(-x_off_set, -y_off_set)
+        painter.fillRect(QRect(self.top_mid_x + (self.yaw/100 * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
+        painter.resetTransform()
+        painter.translate(-y_off_set, -x_off_set)
+        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
+        painter.restore()
+        
+        
     def paintText(self, painter):
         painter.save()
         painter.setPen(QPen(Qt.green, 4))
@@ -158,7 +187,7 @@ class videoFeed(QLabel):
         
         painter.setPen(QPen(Qt.blue,4))
         painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
-                         "RPM:31rpm     Speed:2m/s     Depth:3m")
+                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
 
         # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
@@ -172,27 +201,32 @@ class videoFeed(QLabel):
         self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
     
+    def checkTime(self):
+        time_now = datetime.datetime.now()
+        if (time_now - self.timeBefore).seconds > 1:
+            self.timeBefore = time_now
+            return True 
+        return False
+    
     def paintEvent(self, event):
         QLabel.paintEvent(self,event)
-        
-        self.updateParams()
         painter = QPainter(self)
+        if self.checkTime():
+            self.getArduino()
+        self.updateParams()
         self.paintOpaque(painter)
         self.paintLines(painter)
-        self.paintMidSquares(painter)
-        self.paintText(painter)
         self.paintImages(painter)
+        self.paintMidSquares(painter)
+        self.paintMovingSquares(painter)
+        self.paintText(painter) 
+
         print(self.left_quarter, self.right_quarter)
         
-
-
-
 
         
         
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
-        
-        
     
 
 
