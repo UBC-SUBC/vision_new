@@ -20,7 +20,8 @@ import datetime
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='logs/logs.txt',
-                    filemode='w')
+                    filemode='a',
+                    format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 #@TODO make the logs function
 
 
