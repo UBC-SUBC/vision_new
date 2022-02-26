@@ -81,6 +81,7 @@ class App(QMainWindow):
         
         # self.showMaximized()
         self.get_main_size()
+        self.videoOverlayStatic = videoOverlayStatic(self)
         self.setUpVideoFeedUi()
         self.show()
         
@@ -92,6 +93,7 @@ class App(QMainWindow):
     
     def setUpVideoFeedUi(self):
         self.topRect = QRect(0, 0, contextPerserver.width, contextPerserver.height)
+        self.videoOverlayStatic.setGeometry(self.topRect)
         self.videoLabel.setGeometry(self.topRect)
     
     
@@ -100,125 +102,6 @@ class videoFeed(QLabel):
     
     def __init__(self, parent=None):
         QLabel.__init__(self, parent)
-        self.height_scale = 0.02
-        self.width_scale = 0.99
-        self.left_quarter = contextPerserver.width * self.height_scale
-        self.right_quarter = contextPerserver.width * self.width_scale
-        self.up_quarter = contextPerserver.height * self.height_scale
-        self.down_quarter = contextPerserver.height * self.width_scale
-        self.top_mid_x = (self.left_quarter + self.right_quarter)/2
-        self.right_mid_y = (self.up_quarter + self.down_quarter)/2
-        self.center_square_width = 10
-        self.center_square_height = 30
-        self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
-        self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
-        # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        self.arduino = ArduinoConnector()
-        self.yaw = 0
-        self.pitch = 0
-        self.rpm = "0.0"
-        self.speed = "0.0"
-        self.depth = "0.0"
-        self.timeBefore = datetime.datetime.now()
-        
-    def getArduino(self):
-        json = self.arduino.readJsonFromArduino()
-        self.yaw = json["yaw"]
-        self.pitch = json["pitch"]
-        self.rpm = json["rpm"]
-        self.speed = json["speed"]
-        self.depth = json["depth"]
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
-        
-    
-    def paintOpaque(self, painter):
-        painter.save()
-        self.top_height = self.up_quarter*3
-        right_x = contextPerserver.width-self.left_quarter*2
-        self.bot_height = contextPerserver.height -  self.top_height
-        painter.setOpacity(0.3)
-        painter.setBrush(QBrush(Qt.black))
-        painter.setPen(QPen(Qt.transparent))
-        painter.drawRect(QRect(0, 0, contextPerserver.width,self.top_height ))
-        painter.drawRect(QRect(right_x, self.top_height, contextPerserver.width, self.bot_height))
-        painter.drawRect(QRect(0, self.bot_height, right_x, contextPerserver.height))
-        painter.restore()
-        
-    def updateParams(self):
-        self.left_quarter = contextPerserver.width * self.height_scale
-        self.right_quarter = contextPerserver.width * self.width_scale
-        self.up_quarter = contextPerserver.height * self.height_scale
-        self.down_quarter = contextPerserver.height * self.width_scale
-        self.top_mid_x = (self.left_quarter + self.right_quarter)/2
-        self.right_mid_y = (self.up_quarter + self.down_quarter)/2
-        
-    def paintLines(self, painter):
-        painter.save()
-        painter.setPen(QPen(Qt.green, 4))
-        painter.drawLine(self.left_quarter, self.up_quarter, self.right_quarter, self.up_quarter)
-        painter.drawLine(self.right_quarter, self.up_quarter, self.right_quarter, self.down_quarter)
-        painter.restore()
-    
-    def paintMidSquares(self, painter):
-        painter.save()
-        x_off_set = self.center_square_width * 0.5
-        y_off_set = self.center_square_height * 0.5
-        painter.setPen(QPen(Qt.green, 4))
-        painter.translate(-x_off_set, -y_off_set)
-        # painter.fillRect(QRect(top_mid_x,self.up_quarter-(center_square_height/2), center_square_width, center_square_height), Qt.green)
-        # painter.fillRect(QRect(self.right_quarter-(center_square_height/2),self.right_mid_y, center_square_height,center_square_width), Qt.green)
-        painter.fillRect(QRect(self.top_mid_x,self.up_quarter, self.center_square_width, self.center_square_height), Qt.green)
-        painter.resetTransform()
-        painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
-        painter.restore()
-    
-    def paintMovingSquares(self, painter):
-        painter.save()
-        x_off_set = self.center_square_width * 0.5
-        y_off_set = self.center_square_height * 0.5
-        painter.setPen(QPen(Qt.black, 4))
-        painter.translate(-x_off_set, -y_off_set)
-        painter.fillRect(QRect(self.top_mid_x + (self.yaw/100 * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
-        painter.resetTransform()
-        painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
-        painter.restore()
-        
-        
-    def paintText(self, painter):
-        painter.save()
-        painter.setPen(QPen(Qt.green, 4))
-        font_size = max(contextPerserver.width * contextPerserver.height / 69120, 16)
-        painter.setFont(QFont("times", font_size))
-        ###Draw the text
-        painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
-                         QtCore.Qt.AlignCenter , "yaw")
-        painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
-                         Qt.AlignCenter, "p\ni\nt\nc\nh")
-        
-        painter.setPen(QPen(Qt.blue,4))
-        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
-                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
-
-        # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
-        # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
-        
-        painter.restore()
-    
-    def paintImages(self, painter):
-        self.battery_img = self.battery_img.scaled(contextPerserver.width*0.04, self.top_height)
-        painter.drawPixmap(contextPerserver.width*0.02,self.bot_height, QPixmap.fromImage(self.battery_img))
-        
-        self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
-        painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
-    
-    def checkTime(self):
-        time_now = datetime.datetime.now()
-        if (time_now - self.timeBefore).seconds > 1:
-            self.timeBefore = time_now
-            return True 
-        return False
     
     def paintEvent(self, event):
         self.frame_count += 1
@@ -226,19 +109,6 @@ class videoFeed(QLabel):
             logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
             self.frame_count = 0
         QLabel.paintEvent(self,event)
-        painter = QPainter(self)
-        if self.checkTime():
-            self.getArduino()
-        self.updateParams()
-        self.paintOpaque(painter)
-        self.paintLines(painter)
-        self.paintImages(painter)
-        self.paintMidSquares(painter)
-        self.paintMovingSquares(painter)
-        self.paintText(painter) 
-
-        print(self.left_quarter, self.right_quarter)
-        
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
     
 class videoOverlayStatic(QLabel):
@@ -366,14 +236,8 @@ class videoOverlayStatic(QLabel):
         return False
     
     def paintEvent(self, event):
-        self.frame_count += 1
-        if self.frame_count == 30:
-            logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
-            self.frame_count = 0
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
-        if self.checkTime():
-            self.getArduino()
         self.updateParams()
         self.paintOpaque(painter)
         self.paintLines(painter)
