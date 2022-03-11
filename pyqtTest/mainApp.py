@@ -1,6 +1,3 @@
-from glob import glob
-from time import time
-from turtle import right
 import cv2
 import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication
@@ -9,7 +6,6 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
-from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMainWindow, QMenu, QAction, \
     qApp, QFileDialog, QHBoxLayout
 import logging
@@ -55,6 +51,8 @@ class App(QMainWindow):
         self.screen = QApplication.primaryScreen()
         self.windowsize = screensize
         self.videoLabel = videoFeed(self)
+        self.videoOverlayStatic = videoOverlayStatic(self)
+        
         self.initUI()
         
         
@@ -68,6 +66,7 @@ class App(QMainWindow):
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.videoLabel.setPixmap(QPixmap.fromImage(image))
+        # self.videoLabel.update()
         # self.videoLabel.setScaledContents(True)
 
     def initUI(self):
@@ -81,15 +80,15 @@ class App(QMainWindow):
         
         # self.showMaximized()
         self.get_main_size()
-        self.videoOverlayStatic = videoOverlayStatic(self)
+        
         self.setUpVideoFeedUi()
         self.show()
         
         
-    def resizeEvent(self, event) -> None:
-        self.get_main_size()
-        self.videoLabel.resize(contextPerserver.width, contextPerserver.height)
-        return super().resizeEvent(event)
+    # def resizeEvent(self, event) -> None:
+    #     self.get_main_size()
+    #     self.videoLabel.resize(contextPerserver.width, contextPerserver.height)
+    #     return super().resizeEvent(event)
     
     def setUpVideoFeedUi(self):
         self.topRect = QRect(0, 0, contextPerserver.width, contextPerserver.height)
@@ -391,7 +390,7 @@ class videoOverlayActive(QLabel):
         self.paintMovingSquares(painter)
         self.paintText(painter) 
 
-        print(self.left_quarter, self.right_quarter)
+        # print(self.left_quarter, self.right_quarter)
         
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
 class contextPerserver():
