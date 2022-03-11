@@ -52,7 +52,7 @@ class App(QMainWindow):
         self.windowsize = screensize
         self.videoLabel = videoFeed(self)
         self.videoOverlayStatic = videoOverlayStatic(self)
-        
+        self.frame_count = 0
         self.initUI()
         
         
@@ -65,6 +65,11 @@ class App(QMainWindow):
     
     @pyqtSlot(QImage)
     def setImage(self, image):
+        self.frame_count +=1
+        if self.frame_count == 30:
+            logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
+            self.frame_count = 0
+        # print(self.frame_count)
         self.videoLabel.setPixmap(QPixmap.fromImage(image))
         # self.videoLabel.update()
         # self.videoLabel.setScaledContents(True)
@@ -103,10 +108,10 @@ class videoFeed(QLabel):
         QLabel.__init__(self, parent)
     
     def paintEvent(self, event):
-        self.frame_count += 1
-        if self.frame_count == 30:
-            logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
-            self.frame_count = 0
+        # self.frame_count += 1
+        # if self.frame_count == 30:
+        #     logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
+        #     self.frame_count = 0
         QLabel.paintEvent(self,event)
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
     
