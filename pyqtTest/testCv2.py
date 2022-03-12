@@ -50,7 +50,7 @@ class Thread(QThread):
         
     def run(self):
         cap = cv2.VideoCapture(0)
-        cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         while True:
             ret, frame = cap.read()
             if ret:
