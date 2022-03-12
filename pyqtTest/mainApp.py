@@ -52,6 +52,7 @@ class App(QMainWindow):
         self.windowsize = screensize
         self.videoLabel = videoFeed(self)
         self.videoOverlayStatic = videoOverlayStatic(self)
+        self.videoOverlayActive = videoOverlayActive(self)
         self.frame_count = 0
         self.initUI()
         
@@ -99,6 +100,7 @@ class App(QMainWindow):
         self.topRect = QRect(0, 0, contextPerserver.width, contextPerserver.height)
         self.videoOverlayStatic.setGeometry(self.topRect)
         self.videoLabel.setGeometry(self.topRect)
+        self.videoOverlayActive.setGeometry(self.topRect)
     
     
 class videoFeed(QLabel):
@@ -289,18 +291,18 @@ class videoOverlayActive(QLabel):
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
     
-    def paintOpaque(self, painter):
-        painter.save()
-        self.top_height = self.up_quarter*3
-        right_x = contextPerserver.width-self.left_quarter*2
-        self.bot_height = contextPerserver.height -  self.top_height
-        painter.setOpacity(0.3)
-        painter.setBrush(QBrush(Qt.black))
-        painter.setPen(QPen(Qt.transparent))
-        painter.drawRect(QRect(0, 0, contextPerserver.width,self.top_height ))
-        painter.drawRect(QRect(right_x, self.top_height, contextPerserver.width, self.bot_height))
-        painter.drawRect(QRect(0, self.bot_height, right_x, contextPerserver.height))
-        painter.restore()
+    # def paintOpaque(self, painter):
+    #     painter.save()
+    #     self.top_height = self.up_quarter*3
+    #     right_x = contextPerserver.width-self.left_quarter*2
+    #     self.bot_height = contextPerserver.height -  self.top_height
+    #     painter.setOpacity(0.3)
+    #     painter.setBrush(QBrush(Qt.black))
+    #     painter.setPen(QPen(Qt.transparent))
+    #     painter.drawRect(QRect(0, 0, contextPerserver.width,self.top_height ))
+    #     painter.drawRect(QRect(right_x, self.top_height, contextPerserver.width, self.bot_height))
+    #     painter.drawRect(QRect(0, self.bot_height, right_x, contextPerserver.height))
+    #     painter.restore()
         
     def updateParams(self):
         self.left_quarter = contextPerserver.width * self.height_scale
@@ -310,26 +312,26 @@ class videoOverlayActive(QLabel):
         self.top_mid_x = (self.left_quarter + self.right_quarter)/2
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
         
-    def paintLines(self, painter):
-        painter.save()
-        painter.setPen(QPen(Qt.green, 4))
-        painter.drawLine(self.left_quarter, self.up_quarter, self.right_quarter, self.up_quarter)
-        painter.drawLine(self.right_quarter, self.up_quarter, self.right_quarter, self.down_quarter)
-        painter.restore()
+    # def paintLines(self, painter):
+    #     painter.save()
+    #     painter.setPen(QPen(Qt.green, 4))
+    #     painter.drawLine(self.left_quarter, self.up_quarter, self.right_quarter, self.up_quarter)
+    #     painter.drawLine(self.right_quarter, self.up_quarter, self.right_quarter, self.down_quarter)
+    #     painter.restore()
     
-    def paintMidSquares(self, painter):
-        painter.save()
-        x_off_set = self.center_square_width * 0.5
-        y_off_set = self.center_square_height * 0.5
-        painter.setPen(QPen(Qt.green, 4))
-        painter.translate(-x_off_set, -y_off_set)
-        # painter.fillRect(QRect(top_mid_x,self.up_quarter-(center_square_height/2), center_square_width, center_square_height), Qt.green)
-        # painter.fillRect(QRect(self.right_quarter-(center_square_height/2),self.right_mid_y, center_square_height,center_square_width), Qt.green)
-        painter.fillRect(QRect(self.top_mid_x,self.up_quarter, self.center_square_width, self.center_square_height), Qt.green)
-        painter.resetTransform()
-        painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
-        painter.restore()
+    # def paintMidSquares(self, painter):
+    #     painter.save()
+    #     x_off_set = self.center_square_width * 0.5
+    #     y_off_set = self.center_square_height * 0.5
+    #     painter.setPen(QPen(Qt.green, 4))
+    #     painter.translate(-x_off_set, -y_off_set)
+    #     # painter.fillRect(QRect(top_mid_x,self.up_quarter-(center_square_height/2), center_square_width, center_square_height), Qt.green)
+    #     # painter.fillRect(QRect(self.right_quarter-(center_square_height/2),self.right_mid_y, center_square_height,center_square_width), Qt.green)
+    #     painter.fillRect(QRect(self.top_mid_x,self.up_quarter, self.center_square_width, self.center_square_height), Qt.green)
+    #     painter.resetTransform()
+    #     painter.translate(-y_off_set, -x_off_set)
+    #     painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
+    #     painter.restore()
     
     def paintMovingSquares(self, painter):
         painter.save()
@@ -379,21 +381,21 @@ class videoOverlayActive(QLabel):
         return False
     
     def paintEvent(self, event):
-        self.frame_count += 1
-        if self.frame_count == 30:
-            logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
-            self.frame_count = 0
+        # self.frame_count += 1
+        # if self.frame_count == 30:
+        #     logging.info(msg = str(datetime.datetime.now()) + ' Counted 30 frames loaded')
+        #     self.frame_count = 0
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
         if self.checkTime():
             self.getArduino()
         self.updateParams()
-        self.paintOpaque(painter)
-        self.paintLines(painter)
-        self.paintImages(painter)
-        self.paintMidSquares(painter)
+        # self.paintOpaque(painter)
+        # self.paintLines(painter)
+        # self.paintImages(painter)
+        # self.paintMidSquares(painter)
         self.paintMovingSquares(painter)
-        self.paintText(painter) 
+        # self.paintText(painter) 
 
         # print(self.left_quarter, self.right_quarter)
         
