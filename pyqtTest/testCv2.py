@@ -62,7 +62,7 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
             
-                self.changePixmap.emit(convertToQtFormat)
+                self.changePixmap.emit(p)
                 
 class App(QMainWindow):
     def __init__(self, screensize):
