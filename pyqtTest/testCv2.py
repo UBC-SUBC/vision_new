@@ -50,6 +50,7 @@ class Thread(QThread):
         
     def run(self):
         cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         while True:
             ret, frame = cap.read()
             if ret:
@@ -59,7 +60,7 @@ class Thread(QThread):
                 bytesPerLine = ch * w
                 # print(contextPerserver.width, contextPerserver.height)
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                # p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
+                p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
             
                 self.changePixmap.emit(convertToQtFormat)
                 
