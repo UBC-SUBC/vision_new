@@ -59,9 +59,9 @@ class Thread(QThread):
                 bytesPerLine = ch * w
                 # print(contextPerserver.width, contextPerserver.height)
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
+                # p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
             
-                self.changePixmap.emit(p)
+                self.changePixmap.emit(convertToQtFormat)
                 
 class App(QMainWindow):
     def __init__(self, screensize):
