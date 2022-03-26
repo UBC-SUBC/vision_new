@@ -40,9 +40,7 @@ class Thread(QThread):
 
         cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'MP4V'), 20, (width,height))
+        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'MP4V'), 20, (1920,1080))
 
         while True:
             ret, frame = cap.read()
