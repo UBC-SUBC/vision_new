@@ -42,24 +42,24 @@ class Thread(QThread):
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        with cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height)) as writer:
+        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height))
 
-            while True:
-                future_time = datetime.datetime.now()
-                if (future_time - curr_time).seconds <= 20*60:
-                    writer.write(frame)
-                ret, frame = cap.read()
-                if ret:
+        while True:
+            future_time = datetime.datetime.now()
+            if (future_time - curr_time).seconds <= 20*60:
+                writer.write(frame)
+            ret, frame = cap.read()
+            if ret:
 
-                    # https://stackoverflow.com/a/55468544/6622587
-                    rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                    h, w, ch = rgbImage.shape
-                    bytesPerLine = ch * w
-                    # print(contextPerserver.width, contextPerserver.height)
-                    convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                    p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
-                
-                    self.changePixmap.emit(p)
+                # https://stackoverflow.com/a/55468544/6622587
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                h, w, ch = rgbImage.shape
+                bytesPerLine = ch * w
+                # print(contextPerserver.width, contextPerserver.height)
+                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
+            
+                self.changePixmap.emit(p)
                     
 class App(QMainWindow):
     def __init__(self, screensize):
