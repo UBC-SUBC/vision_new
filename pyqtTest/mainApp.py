@@ -42,7 +42,7 @@ class Thread(QThread):
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height))
+        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'MP4V'), 20, (width,height))
 
         while True:
             ret, frame = cap.read()
@@ -59,6 +59,7 @@ class Thread(QThread):
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
             
                 self.changePixmap.emit(p)
+                
                     
 class App(QMainWindow):
     def __init__(self, screensize):
