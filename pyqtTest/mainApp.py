@@ -30,11 +30,22 @@ class Thread(QThread):
     #     self.app = app
         
     def run(self):
+        curr_dir = Path(__file__).parent
+        output_dir = os.path.join(curr_dir, "test_videos")
+        try:
+            os.mkdir(output_dir)
+        except:
+            pass
+        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height))
+
         cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         while True:
             ret, frame = cap.read()
             if ret:
+                writer.write(frame)
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
@@ -409,5 +420,7 @@ class contextPerserver():
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     screensize = app.desktop().availableGeometry().size()
+
+
     ex = App(screensize)
     sys.exit(app.exec_())
