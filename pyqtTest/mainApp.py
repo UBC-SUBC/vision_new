@@ -40,7 +40,9 @@ class Thread(QThread):
 
         cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'MP4V'), 20, (1920,1080))
+        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
 
         while True:
             ret, frame = cap.read()
@@ -70,7 +72,14 @@ class App(QMainWindow):
         self.videoOverlayActive = videoOverlayActive(self)
         self.frame_count = 0
         self.initUI()
-        
+    
+    def keyPressEvent(self, event):
+        """Close application from escape key.
+
+        results in QMessageBox dialog from closeEvent, good but how/why?
+        """
+        if event.key() == Qt.Key_Q:
+            self.close()
         
     def get_main_size(self):
         width = self.frameGeometry().width()
@@ -101,7 +110,6 @@ class App(QMainWindow):
         
         # self.showMaximized()
         self.get_main_size()
-        
         self.setUpVideoFeedUi()
         self.show()
         
