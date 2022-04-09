@@ -22,6 +22,32 @@ logging.basicConfig(level=logging.DEBUG,
 #@TODO make the logs function
 
 
+class RecordThread(QThread):
+    def run(self):
+        curr_time = datetime.datetime.now()
+        curr_dir = Path(__file__).parent
+        output_dir = os.path.join(curr_dir, "test_videos")
+        try:
+            os.mkdir(output_dir)
+        except:
+            pass
+
+        cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+        writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+        
+        while True:
+            ret, frame = cap.read()
+            if ret:
+                future_time = datetime.datetime.now()
+                if (future_time - curr_time).seconds <= 20*60:
+                    writer.write(frame)
+                else:
+                    break
+
 class Thread(QThread):
     changePixmap = pyqtSignal(QImage)
     
@@ -42,8 +68,9 @@ class Thread(QThread):
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
-
+        # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+        writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+        
         while True:
             ret, frame = cap.read()
             if ret:
@@ -57,7 +84,7 @@ class Thread(QThread):
                 # print(contextPerserver.width, contextPerserver.height)
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
-            
+                # writer.write(frame)
                 self.changePixmap.emit(p)
                 
                     
@@ -107,6 +134,9 @@ class App(QMainWindow):
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
+        
+        th_write = RecordThread(self)
+        th_write.start()
         
         # self.showMaximized()
         self.get_main_size()
