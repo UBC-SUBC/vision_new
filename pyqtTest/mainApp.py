@@ -208,7 +208,7 @@ class videoOverlayStatic(QLabel):
         self.rpm = json["rpm"]
         self.speed = json["speed"]
         self.depth = json["depth"]
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
+        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
         
     
     def paintOpaque(self, painter):
@@ -453,7 +453,7 @@ class videoOverlayActive(QLabel):
         # self.paintImages(painter)
         # self.paintMidSquares(painter)
         self.paintMovingSquares(painter)
-        # self.paintText(painter) 
+        # self.paintText(painter) TODO: fix paintText function
 
         # print(self.left_quarter, self.right_quarter)
         
