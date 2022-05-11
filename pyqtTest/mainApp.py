@@ -16,7 +16,7 @@ import datetime
 
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG,
-                    filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p"))+'.txt'),
+                    filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I%M%S_%p"))+'.txt'),
                     filemode='a',
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 #@TODO make the logs function
