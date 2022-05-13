@@ -7,6 +7,10 @@ import random
 class ArduinoConnector:
      ending = bytes('\n', 'utf-8')
     
+     def getErrorData(self):
+        return {'yaw':-random.randint(0,10), 'pitch':-random.randint(0,10), 'rpm': str(-random.randint(0,10)),
+             'speed': "-99999", 'depth': "-99999",'battery':False}
+    
      def __init__(self) -> None: 
          self.ErrorData = {'yaw':-99999, 'pitch':-99999, 'rpm': "-99999",
              'speed': "-99999", 'depth': "-99999",'battery':False}
@@ -49,9 +53,11 @@ class ArduinoConnector:
              line.replace('\r', '')
              DataToDisplay = json.loads(line)
          except:
+             print("failed again display error data")
              if self.ser is not None:
                 self.ser.close()
                 self.ser = None
-             DataToDisplay = self.ErrorData
+            #  DataToDisplay = self.ErrorData
+             DataToDisplay = self.getErrorData()
          print(DataToDisplay)
          return DataToDisplay

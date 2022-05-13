@@ -293,12 +293,6 @@ class videoOverlayStatic(QLabel):
         self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
     
-    def checkTime(self):
-        time_now = datetime.datetime.now()
-        if (time_now - self.timeBefore).seconds > 1:
-            self.timeBefore = time_now
-            return True 
-        return False
     
     def paintEvent(self, event):
         QLabel.paintEvent(self,event)
@@ -309,7 +303,7 @@ class videoOverlayStatic(QLabel):
         self.paintImages(painter)
         self.paintMidSquares(painter)
         self.paintMovingSquares(painter)
-        self.paintText(painter) 
+        # self.paintText(painter) 
 
         print(self.left_quarter, self.right_quarter)
         
@@ -327,6 +321,8 @@ class videoOverlayActive(QLabel):
         self.down_quarter = contextPerserver.height * self.width_scale
         self.top_mid_x = (self.left_quarter + self.right_quarter)/2
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
+        self.top_height = self.up_quarter*3
+        self.bot_height = contextPerserver.height -  self.top_height
         self.center_square_width = 10
         self.center_square_height = 30
         self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
@@ -338,8 +334,8 @@ class videoOverlayActive(QLabel):
         self.rpm = "0.0"
         self.speed = "0.0"
         self.depth = "0.0"
-        self.timeBefore = datetime.datetime.now()
-        
+        # self.timeBefore = datetime.datetime.now()
+        self.arduino_fetch_counter = 0
     def getArduino(self):
         json = self.arduino.readJsonFromArduino()
         self.yaw = json["yaw"]
@@ -370,7 +366,8 @@ class videoOverlayActive(QLabel):
         self.down_quarter = contextPerserver.height * self.width_scale
         self.top_mid_x = (self.left_quarter + self.right_quarter)/2
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
-        
+        self.top_height = self.up_quarter*3
+        self.bot_height = contextPerserver.height -  self.top_height
     # def paintLines(self, painter):
     #     painter.save()
     #     painter.setPen(QPen(Qt.green, 4))
@@ -431,12 +428,18 @@ class videoOverlayActive(QLabel):
         self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
     
-    def checkTime(self):
-        time_now = datetime.datetime.now()
-        if (time_now - self.timeBefore).seconds > 1:
-            self.timeBefore = time_now
-            return True 
-        return False
+    # def checkTime(self):
+    #     time_now = datetime.datetime.now()
+    #     logging.info(msg = "Time now========" + str(time_now))
+    #     logging.info(msg = "seconds" + str( time_now - self.timeBefore))
+    #     if (time_now - self.timeBefore).seconds > 1:
+    #         print("getting  it")
+    #         logging.info(msg = "getting it")
+            
+    #         self.timeBefore = time_now
+    #         return True 
+    #     print("Time before========", self.timeBefore)
+    #     return False
     
     def paintEvent(self, event):
         # self.frame_count += 1
@@ -445,15 +448,20 @@ class videoOverlayActive(QLabel):
         #     self.frame_count = 0
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
-        if self.checkTime():
+        # print(self.checkTime(), "curr time========")
+        if self.arduino_fetch_counter >= 3:
+            print(self.arduino_fetch_counter)
+            self.arduino_fetch_counter = 0
             self.getArduino()
+        self.arduino_fetch_counter += 1
         self.updateParams()
+        print("updating")
         # self.paintOpaque(painter)
         # self.paintLines(painter)
         # self.paintImages(painter)
         # self.paintMidSquares(painter)
         self.paintMovingSquares(painter)
-        # self.paintText(painter) TODO: fix paintText function
+        self.paintText(painter) #TODO: fix paintText function
 
         # print(self.left_quarter, self.right_quarter)
         
