@@ -16,7 +16,7 @@ import datetime
 
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG,
-                    filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p"))+'.txt'),
+                    filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I%M%S_%p"))+'.txt'),
                     filemode='a',
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 #@TODO make the logs function
@@ -31,8 +31,13 @@ class RecordThread(QThread):
             os.mkdir(output_dir)
         except:
             pass
-
+        
         cap = cv2.VideoCapture(0)
+
+        # test whether or not the camera exists, if not reinstantiate it
+        while cap.read()[0] == False:
+            cap = cv2.VideoCapture(0)
+
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -135,8 +140,9 @@ class App(QMainWindow):
         th.changePixmap.connect(self.setImage)
         th.start()
         
-        th_write = RecordThread(self)
-        th_write.start()
+        # commenting out for testing - Arthur
+        #th_write = RecordThread(self)
+        #th_write.start()
         
         # self.showMaximized()
         self.get_main_size()
@@ -202,7 +208,7 @@ class videoOverlayStatic(QLabel):
         self.rpm = json["rpm"]
         self.speed = json["speed"]
         self.depth = json["depth"]
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
+        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
         
     
     def paintOpaque(self, painter):
@@ -411,8 +417,7 @@ class videoOverlayActive(QLabel):
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
         painter.setPen(QPen(Qt.blue,4))
-        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
-                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
+        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
 
         # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
@@ -448,7 +453,7 @@ class videoOverlayActive(QLabel):
         # self.paintImages(painter)
         # self.paintMidSquares(painter)
         self.paintMovingSquares(painter)
-        # self.paintText(painter) 
+        # self.paintText(painter) TODO: fix paintText function
 
         # print(self.left_quarter, self.right_quarter)
         
