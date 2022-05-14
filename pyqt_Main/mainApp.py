@@ -190,8 +190,8 @@ class videoOverlayStatic(QLabel):
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
         self.center_square_width = 10
         self.center_square_height = 30
-        self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
-        self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
+        self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
+        self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         self.arduino = ArduinoConnector()
         self.yaw = 0
