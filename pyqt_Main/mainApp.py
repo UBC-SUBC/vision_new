@@ -449,7 +449,7 @@ class videoOverlayActive(QLabel):
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
         # print(self.checkTime(), "curr time========")
-        if self.arduino_fetch_counter >= 3:
+        if self.arduino_fetch_counter >= 100:
             print(self.arduino_fetch_counter)
             self.arduino_fetch_counter = 0
             self.getArduino()
