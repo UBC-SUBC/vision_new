@@ -9,6 +9,7 @@ python = "^3.8"
 PyQt5 = "^5.15.6"
 opencv-python = "^4.5.5"
 pyserial = "^3.5"
+numpy = "^1.23.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
