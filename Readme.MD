@@ -77,13 +77,13 @@ To get a local copy up and running follow these steps.
 
 ### Installation
 
-1. Install python at https://www.python.org/downloads/
-   Check for installation status
+1. Install python at https://www.python.org/downloads/ \
+   Check for installation status:
    ```sh
    python --version
    ```
-2. Install poetry at https://python-poetry.org/docs/#installing-with-the-official-installer
-   Check for installation status
+2. Install poetry at https://python-poetry.org/docs/#installing-with-the-official-installer \
+   Check for installation status:
    ```sh
    poetry --version
    ```
