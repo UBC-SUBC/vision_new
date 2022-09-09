@@ -14,7 +14,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#system-requirements">System Requirements</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -67,33 +67,45 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get a local copy up and running follow these steps.
 
-### Prerequisites
+### System Requirements
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* git
+* python 
+* poetry 
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Clone the repo - vision_new
-2. Install python
+1. Install python at https://www.python.org/downloads/ \
+   Check for installation status:
    ```sh
-  https://www.python.org/downloads/
+   python --version
    ```
-3. Set up poetry
+2. Install poetry at https://python-poetry.org/docs/#installing-with-the-official-installer \
+   Check for installation status:
    ```sh
-   https://python-poetry.org/docs/
+   poetry --version
    ```
-4. Download packages
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+3. Clone vision_new (repo) 
+   ```sh
+   git clone git@github.com:UBC-SUBC/vision_new.git
+   ```
+4. Navigate to pyqt_split (branch)
+   ```sh
+   git checkout pyqt_split
+   ```
+5. Navigate to main application directory 
+   ```sh
+   cd pyqt_Main
+   ```
+6. Install all dependencies with poetry 
+   ```sh
+   poetry install 
+   ```
+7. Run mainApp.py
+   ```sh
+   poetry run python mainApp.py
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
