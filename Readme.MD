@@ -32,8 +32,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-!!! Good morning, it's chantle :) this is a test ~(C_C!)~ !!!
-
 There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
 Here's why:
@@ -84,16 +82,16 @@ This is an example of how to list things you need to use the software and how to
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo - vision_new
+2. Install python
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+  https://www.python.org/downloads/
    ```
-3. Install NPM packages
+3. Set up poetry
    ```sh
-   npm install
+   https://python-poetry.org/docs/
    ```
-4. Enter your API in `config.js`
+4. Download packages
    ```js
    const API_KEY = 'ENTER YOUR API';
    ```

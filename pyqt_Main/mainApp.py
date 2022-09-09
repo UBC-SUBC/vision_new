@@ -1,13 +1,10 @@
 import cv2
 import sys
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication
-from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot, QRect
 from PyQt5 import QtCore
-from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
-from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMainWindow, QMenu, QAction, \
-    qApp, QFileDialog, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QSizePolicy, QScrollArea, QMessageBox, \
+    QMainWindow, QMenu, QAction, qApp, QFileDialog, QHBoxLayout
+from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot, QRect, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtGui import QImage, QPixmap, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
 import logging
 from pathlib import Path
 import os
