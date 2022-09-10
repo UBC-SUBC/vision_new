@@ -15,15 +15,15 @@ def canny(frame):
 
     edges = cv2.Canny(image=img_blur, threshold1=lower, threshold2=upper) # Canny Edge Detection
     edges = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)  #convert canny image to bgr
-    edges *= np.array((0,0,1),np.uint8)
-    cv2.line(edges, (50, 100), (150, 100), (255,255,255), 1)
+    #edges *= np.array((0,0,1),np.uint8)
+    #cv2.line(edges, (50, 100), (150, 100), (255,255,255), 1)
     #add_weight = cv2.addWeighted( frame, 0.5, edges, 0.5, 0.0) # blend src image with canny image
     new_image = cv2.add(frame, edges) # add src image with canny image
     # Display Canny Edge Detection Image
-    cv2.imshow('Canny Edge Detection',new_image)
+    cv2.imshow('Canny Edge Detection',edges)
 
 # define a video capture object
-vid = cv2.VideoCapture(0)
+vid = cv2.VideoCapture("20181212_123100.MOV")
   
 while(True):
       
