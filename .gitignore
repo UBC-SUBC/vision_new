@@ -1,0 +1,6 @@
+*txt
+*.avi
+*.mp4
+.DS_Store
+*.pyc
+settings.json

@@ -1,4 +1,5 @@
 from gpiozero import Button
+import time
 import RPi.GPIO as GPIO
 from time import sleep
 import picamera
@@ -15,8 +16,8 @@ import json
 
 # changing variables based on raspi
 path = '/media/usb3/'  # usb path to save files
-serialPiPort = '/dev/ttyACM0'
-#serialPiPort = '/dev/ttyUSB0'
+#serialPiPort = '/dev/ttyACM0'
+serialPiPort = '/dev/ttyUSB0'
 imagePath = "/home/pi/Desktop/vision/"  # images path on pi
 
 #setup display variables
@@ -37,7 +38,7 @@ buttonpin = 2
 
 #initial data values (pre serial)
 DataToDisplay = {'yaw':20, 'pitch':10, 'rpm':'100', 'speed':'2','depth':'2.5','battery':True}
-
+ErrorData = {'yaw':-1, 'pitch':-1, 'rpm':'-1', 'speed':'-1', 'depth':'-1','battery':False}
 #camera Setup
 camera = PiCamera()
 camera.led =True
@@ -47,15 +48,18 @@ camera.vflip=True
 camera.clock_mode='reset'
 
 #serial setup
-ser=serial.Serial(
+try:
+    ser=serial.Serial(
     port=serialPiPort,
     baudrate = 9600,
 #    parity=serial.PARITY_NONE,
 #    stopbits=serial.STOPBITS_ONE,
 #    bytesize=serial.EIGHTBITS,
 #    timeout=1
-)
-ser.flush()
+    )
+    ser.flush()
+except:
+    ser = None
 
 #button setup
 statusbutton = Button(buttonpin)
@@ -69,6 +73,7 @@ blankcanvas = Image.new('RGBA',(screenX,screenY))
 datafont = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",20)
 smalltextfont = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",8)
 
+#@TODO main switch
 #creaitng images for indicators
 WarningIM = Image.open(imagePath+"warning.png")
 WarningIM = WarningIM.resize([linegap*2,linegap*2])
@@ -79,6 +84,7 @@ RaceIM = RaceIM.resize([linegap*2,linegap*2])
 lightsIM = Image.open(imagePath+"highbeams.png")
 lightsIM = lightsIM.resize([linegap*2,linegap*2])
 
+#@TODO main switch
 #creating stationary image for bars and backgroungs
 pitchYawAxisIM = blankcanvas.copy()
 draw = ImageDraw.Draw(pitchYawAxisIM)
@@ -156,18 +162,18 @@ def SerielOverlay():
     ending = bytes('}', 'utf-8')
     flag = 0
     while flag < 1:
-        line = ser.read_until(ending)
         try:
+            line = ser.read_until(ending)
             DataToDisplay = json.loads(line)
-            # configure data Values to display
-            ValuesText = "RPM:" + str(DataToDisplay['rpm']) + " rpm    Speed:" + str(
-                DataToDisplay['speed']) + " m/s     Depth:" + str(DataToDisplay['depth']) + "m"
-            pitchAjust = (DataToDisplay['pitch'] + pitchRange) / (pitchRange * 2)
-            yawAjust = (DataToDisplay['yaw'] + yawRange) / (yawRange * 2)
-            flag = 1
         except:
-        
-            print("skipped json, unable to load")
+            DataToDisplay = ErrorData
+    
+        # configure data Values to display
+        ValuesText = "RPM:" + str(DataToDisplay['rpm']) + " rpm    Speed:" + str(
+        DataToDisplay['speed']) + " m/s     Depth:" + str(DataToDisplay['depth']) + "m"
+        pitchAjust = (DataToDisplay['pitch'] + pitchRange) / (pitchRange * 2)
+        yawAjust = (DataToDisplay['yaw'] + yawRange) / (yawRange * 2)
+        flag = 1
             
 
     
@@ -197,8 +203,9 @@ def SerielOverlay():
     #update the overlay with the new image
     global movingOverlay
     #camera.remove_overlay(movingoverlay)
-    #movingoverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
-    movingoverlay.update(movingIM.tobytes())
+    #movingOverlay = camera.add_overlay(movingIM.tobytes(),layer = 4)
+    movingOverlay.update(movingIM.tobytes())
+    time.sleep(0.1)
 
 try:
     while True: 
