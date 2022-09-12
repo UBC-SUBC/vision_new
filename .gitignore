@@ -1,2 +1,6 @@
-
-edge_detection/20181212_123100.MOV
+*txt
+*.avi
+*.mp4
+.DS_Store
+*.pyc
+settings.json

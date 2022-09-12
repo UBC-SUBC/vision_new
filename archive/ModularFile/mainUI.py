@@ -18,8 +18,10 @@ class MainUI:
                                                  layer=3)
         self.movingOverlay = self.cam.getCam().add_overlay(self.getMovingIM().tobytes(),
                                                 layer=4)
+        ##Battery and highbeams images
         self.indicatorsOverlay = self.cam.getCam().add_overlay(self.getIndicatorIM().tobytes(),
                                                     layer=4)
+        ##Time stamp overlay
         self.timeOverlay = self.cam.getCam().add_overlay(self.getTimeIM().tobytes(),
                                               layer=4)
         #-------------Button Var
