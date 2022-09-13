@@ -1,0 +1,12 @@
+{
+    "LowerBound":"200",
+    "UpperBound":"255",
+    "MinDistBetweenBlobs":"50",
+    "FilterByInertia":"False",
+    "FilterByConvexity":"False",
+    "FilterByColor":"True",
+    "FilterByCircularity":"False",
+    "FilterByArea":"True",
+    "MinArea":"500.0",
+    "MaxArea":"3000.0"
+}
