@@ -18,7 +18,6 @@ class ComputerVisionModule():
     upper_bound = int
 
     latest_image = cv2.Mat
-
     keypoints = [cv2.KeyPoint]
     line = [float]
 
@@ -54,16 +53,16 @@ class ComputerVisionModule():
     # The function returns the location of the detected LEDs and a linear fit of their locations (slope and intercept)
     # TODO: Improve this function by testing it in various lighting situations, this will be the core of our detection pipeline
     def find_LEDs(self):
-        gray = cv2.cvtColor(self.latest_image, cv2.COLOR_BGR2GRAY)
-        img_blur = cv2.medianBlur(gray, 5)
+        self.gray = cv2.cvtColor(self.latest_image, cv2.COLOR_BGR2GRAY)
+        self.img_blur = cv2.medianBlur(self.gray, 5)
 
         # Create a mask of only the colors within the specified gray scale thresholds
-        mask = cv2.inRange(img_blur, self.lower_bound, self.upper_bound)
-        mask = cv2.bitwise_not(mask)
+        self.mask = cv2.inRange(self.img_blur, self.lower_bound, self.upper_bound)
+        self.mask = cv2.bitwise_not(self.mask)
 
         detector = cv2.SimpleBlobDetector_create(self.params) 
         
-        self.keypoints = detector.detect(mask)
+        self.keypoints = detector.detect(self.mask)
 
         self.line = np.polyfit([x.pt[0] for x in self.keypoints], [y.pt[1] for y in self.keypoints], 1)
 
@@ -71,9 +70,9 @@ class ComputerVisionModule():
 
         # Draw detected blobs as red circles.
         # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
-        im_with_keypoints = cv2.drawKeypoints(self.latest_image, self.keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        self.im_with_keypoints = cv2.drawKeypoints(self.latest_image, self.keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        im_with_line = cv2.line(im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
+        im_with_line = cv2.line(self.im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
 
         # Show keypoints
         cv2.imshow("Keypoints", im_with_line)
