@@ -8,8 +8,6 @@ class ArduinoVar:
                 'speed':'-1', 'depth':'-1','battery':False}
     ending = bytes('}', 'utf-8')
     
-
-    
 class CameraVar:
     screenX =  int(1280)
     screenY =  int(720) #camera is also recording at this res
