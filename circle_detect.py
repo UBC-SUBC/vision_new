@@ -20,8 +20,6 @@ class ComputerVisionModule():
     latest_image = cv2.Mat
     keypoints = [cv2.KeyPoint]
     line = [float]
-
-
     # Constructor for the computer vision module of the code. 
     # Currently set up to take its parameters from a specified JSON file for simple testing of different configurations
     def __init__(self, json_path: str):
@@ -72,10 +70,10 @@ class ComputerVisionModule():
         # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
         self.im_with_keypoints = cv2.drawKeypoints(self.latest_image, self.keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        im_with_line = cv2.line(self.im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
-
-        # Show keypoints
-        cv2.imshow("Keypoints", im_with_line)
+        self.im_with_line = cv2.line(self.im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
+  
+         self.im_with_keypoints_rgb = cv2.cvtColor(self.im_with_keypoints, cv2.COLOR_BGR2RGB)     # Show keypoints
+        cv2.imshow("Keypoints", self.im_with_line)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
