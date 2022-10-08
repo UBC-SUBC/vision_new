@@ -23,6 +23,19 @@ jupyter = "^1.0.0"
 notebook = "^6.4.12"
 matplotlib = "^3.6.0"
 
+
+[tool.poetry.group.detect_dev_dependencies.dependencies]
+scikit-learn = "^1.1.2"
+numpy = "^1.23.3"
+matplotlib = "^3.6.1"
+Pillow = "^9.2.0"
+rawpy = "^0.17.2"
+scikit-image = "^0.19.3"
+torch = "^1.12.1"
+torchvision = "^0.13.1"
+pynng = "^0.7.1"
+PyYAML = "^6.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
