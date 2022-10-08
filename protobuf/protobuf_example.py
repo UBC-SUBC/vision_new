@@ -1,4 +1,4 @@
-import generated.VisionDAQ_pb2 as messaging
+import generated.SUBC_pb2 as messaging
 
 if __name__ == '__main__':
     message = messaging.FromDAQ()

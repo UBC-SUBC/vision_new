@@ -35,7 +35,7 @@ protoc <path to .proto file> -I=<path to directory where proto files are stored>
 On my personal computer (Arthur here) the command looks like:
 
 ```
-protoc /media/ab/Files/Programming/git/vision_new/protobuf/VisionDAQ.proto -I=/media/ab/Files/Programming/git/vision_new/protobuf --python_out=/media/ab/Files/Programming/git/vision_new/protobuf/generated
+protoc /media/ab/Files/Programming/git/vision_new/protobuf/SUBC.proto -I=/media/ab/Files/Programming/git/vision_new/protobuf --python_out=/media/ab/Files/Programming/git/vision_new/protobuf/generated
 ```
 
 I recommend putting all the generated files in the protobuf/generated directory of the git repository just for tidiness 
