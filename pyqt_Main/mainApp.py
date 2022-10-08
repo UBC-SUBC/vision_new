@@ -10,6 +10,7 @@ from pathlib import Path
 import os
 from arduinoConnector import ArduinoConnector
 import datetime
+import variables
 
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG,
@@ -199,13 +200,23 @@ class videoOverlayStatic(QLabel):
         self.timeBefore = datetime.datetime.now()
         
     def getArduino(self):
-        json = self.arduino.readJsonFromArduino()
-        self.yaw = json["yaw"]
-        self.pitch = json["pitch"]
-        self.rpm = json["rpm"]
-        self.speed = json["speed"]
-        self.depth = json["depth"]
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
+        if variables.ArduinoVar.protobuf:
+            message = self.arduino.readProtobufFromDAQ()
+            
+            self.yaw = message.yaw
+            self.pitch = message.pitch
+            self.rpm = str(message.rpm)
+            self.speed = str(message.speed)
+            self.depth = str(message.depth)
+
+        else:
+            json = self.arduino.readJsonFromArduino()
+            self.yaw = json["yaw"]
+            self.pitch = json["pitch"]
+            self.rpm = json["rpm"]
+            self.speed = json["speed"]
+            self.depth = json["depth"]
+            logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
         
     
     def paintOpaque(self, painter):

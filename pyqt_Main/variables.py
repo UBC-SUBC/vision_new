@@ -7,6 +7,7 @@ class ArduinoVar:
     ErrorData = {'yaw':-1, 'pitch':-1, 'rpm':'-1', 
                 'speed':'-1', 'depth':'-1','battery':False}
     ending = bytes('}', 'utf-8')
+    protobuf = True
     
 
     

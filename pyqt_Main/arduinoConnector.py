@@ -2,6 +2,7 @@ import serial
 import json
 from variables import ArduinoVar
 import random
+from ..protobuf.generated import SUBC_pb2 as messaging
 
 
 class ArduinoConnector:
@@ -15,6 +16,8 @@ class ArduinoConnector:
          self.ErrorData = {'yaw':-99999, 'pitch':-99999, 'rpm': "-99999",
              'speed': "-99999", 'depth': "-99999",'battery':False}
         
+         self.message = messaging.FromDAQ()
+
          #serial setup
          try:
              self.ser=serial.Serial(
@@ -61,3 +64,21 @@ class ArduinoConnector:
              DataToDisplay = self.getErrorData()
          print(DataToDisplay)
          return DataToDisplay
+         
+     def readProtobufFromDAQ(self):
+         try:
+            line = self.ser.readline()
+            self.message.ParseFromString(line)
+            print('Decoded object:\n', self.message)
+            return self.message
+         except:
+            self.message.yaw = -1
+            self.message.pitch = -1
+            self.message.rpm = -1
+            self.message.depth = -1
+            self.message.speed = -1
+            self.message.battery = False
+            print('Failed to read a message from the DAQ')
+         
+         return self.message
+         
