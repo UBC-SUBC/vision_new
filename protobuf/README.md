@@ -25,3 +25,17 @@ export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 ## Writing Structures with Protobufs
 
 Google protobuf uses a c-like syntax to define its structures. You will start by writing your structure in the protobuf language in a .proto file and then will run the protoc compiler to compile it to the language of your choice. This process will automatically generate the files you need to access the structure in your desired language and encode or decode it to and from bytes. For documentation and examples of protobuf syntax, see this [link](https://developers.google.com/protocol-buffers/docs/proto). 
+
+The command to generate the protobuf structures for python are:  
+
+```
+protoc <path to .proto file> -I=<path to directory where proto files are stored> --python_out=<path to output directory>
+```
+
+On my personal computer (Arthur here) the command looks like:
+
+```
+protoc /media/ab/Files/Programming/git/vision_new/protobuf/VisionDAQ.proto -I=/media/ab/Files/Programming/git/vision_new/protobuf --python_out=/media/ab/Files/Programming/git/vision_new/protobuf/generated
+```
+
+I recommend putting all the generated files in the protobuf/generated directory of the git repository just for tidiness 
