@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package VisionDAQ; 
+
+message FromDAQ {
+    required int32 yaw = 1;
+    required int32 pitch = 2;
+    required int32 rpm = 3;
+    required int32 speed = 4;
+    required int32 depth = 5;
+    required bool battery = 6;
+}
