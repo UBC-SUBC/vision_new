@@ -70,12 +70,13 @@ class ComputerVisionModule():
         # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
         self.im_with_keypoints = cv2.drawKeypoints(self.latest_image, self.keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        self.im_with_line = cv2.line(self.im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
+        self.im_with_line = cv2.line(self.im_with_keypoints, (int(self.keypoints[0].pt[0]), int(self.keypoints[0].pt[1])),  
+                                     (int(self.keypoints[len(self.keypoints) - 1].pt[0]), int(self.keypoints[len(self.keypoints) - 1].pt[1])),  (0, 0, 255), 3)
   
-         self.im_with_keypoints_rgb = cv2.cvtColor(self.im_with_keypoints, cv2.COLOR_BGR2RGB)     # Show keypoints
-        cv2.imshow("Keypoints", self.im_with_line)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        self.im_with_keypoints_rgb = cv2.cvtColor(self.im_with_keypoints, cv2.COLOR_BGR2RGB)     # Show keypoints
+        # cv2.imshow("Keypoints", self.im_with_line)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
 # The following code is commented out so that it can be used when debugging, it creates an instance of the ComputerVisionModule class 
 # and runs a single instance of the detection pipeline
