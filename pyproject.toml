@@ -23,6 +23,8 @@ jupyter = "^1.0.0"
 notebook = "^6.4.12"
 matplotlib = "^3.6.0"
 
+[tool.poetry.group.detect_dev_dependencies]
+optional = true
 
 [tool.poetry.group.detect_dev_dependencies.dependencies]
 scikit-learn = "^1.1.2"
