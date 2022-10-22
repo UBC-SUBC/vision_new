@@ -1,0 +1,6 @@
+[deps]
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+ImageEdgeDetection = "2b14c160-480b-11ea-1b58-656063328ff7"
+Noise = "81d43f40-5267-43b7-ae1c-8b967f377efa"
+TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
