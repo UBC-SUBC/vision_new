@@ -1,0 +1,3 @@
+[submodule "communications"]
+	path = communications
+	url = git@github.com:UBC-SUBC/communications.git
