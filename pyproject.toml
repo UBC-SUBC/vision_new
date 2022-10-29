@@ -6,7 +6,8 @@ authors = ["tu1026 <s31302@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-PyQt5 = "^5.15.6"
+##only option that is on pyqt
+PyQt5 = "=5.15.2"
 opencv-python = "^4.5.5"
 pyserial = "^3.5"
 numpy = "^1.23.2"
