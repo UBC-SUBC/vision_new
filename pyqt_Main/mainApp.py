@@ -10,7 +10,11 @@ from pathlib import Path
 import os
 from arduinoConnector import ArduinoConnector
 import datetime
+import yappi
+import threading
 
+yappi.set_clock_type("wall")
+yappi.start()
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG,
                     filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I%M%S_%p"))+'.txt'),
@@ -19,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG,
 #@TODO make the logs function
 
 
-class RecordThread(QThread):
+class RecordThread(QThread, threading.Thread):
     def run(self):
         curr_time = datetime.datetime.now()
         curr_dir = Path(__file__).parent
@@ -50,7 +54,7 @@ class RecordThread(QThread):
                 else:
                     break
 
-class Thread(QThread):
+class Thread(QThread, threading.Thread):
     changePixmap = pyqtSignal(QImage)
     
     # def __init__(self, app):
@@ -74,6 +78,8 @@ class Thread(QThread):
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
         
         while True:
+            if self.isInterruptionRequested():
+                return
             ret, frame = cap.read()
             if ret:
                 future_time = datetime.datetime.now()
@@ -100,6 +106,7 @@ class App(QMainWindow):
         self.videoOverlayStatic = videoOverlayStatic(self)
         self.videoOverlayActive = videoOverlayActive(self)
         self.frame_count = 0
+        self.threads = []
         self.initUI()
     
     def keyPressEvent(self, event):
@@ -108,6 +115,20 @@ class App(QMainWindow):
         results in QMessageBox dialog from closeEvent, good but how/why?
         """
         if event.key() == Qt.Key_Q:
+            yappi.stop()
+            yappi.get_func_stats().print_all()
+            stats = yappi.get_thread_stats()
+            stats.sort("name", "ttot").print_all()
+            threads = yappi.get_thread_stats()
+            # for thread in self.threads:
+            #     thread.join()
+            #     thread.requestInterruption()
+            print('number of theads: ', len(threads))
+            for thread in threads:
+                print(
+                    "Function stats for (%s) (%d)" % (thread.name, thread.id)
+                )  # it is the Thread.__class__.__name__
+                yappi.get_func_stats(ctx_id=thread.id).print_all()
             self.close()
         
     def get_main_size(self):
@@ -136,7 +157,6 @@ class App(QMainWindow):
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
-        
         # commenting out for testing - Arthur
         #th_write = RecordThread(self)
         #th_write.start()
