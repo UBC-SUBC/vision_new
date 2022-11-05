@@ -88,10 +88,12 @@ class Thread(QThread):
             pass
 
         cap = cv2.VideoCapture(0)
+        # cap.set(cv2.CAP_PROP_MODE, cv2.CAP_MODE_RGB)
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
+        cap.set(cv2.CAP_PROP_FPS, 60)
+        # width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        # height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
         
         #Loops through frames and processes to display the video on screen
@@ -102,13 +104,11 @@ class Thread(QThread):
                 if (future_time - curr_time).seconds <= 20*60:
                     writer.write(frame)
                 # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
+                # rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                h, w, ch = frame.shape
                 bytesPerLine = ch * w
-
-                #processing (converting) to Qt format to display the video on interface
-                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                #scale dimensions 
+                # print(contextPerserver.width, contextPerserver.height)
+                convertToQtFormat = QImage(frame.data, w, h, bytesPerLine, QImage.Format_BGR888)
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
                 self.changePixmap.emit(p)
 
