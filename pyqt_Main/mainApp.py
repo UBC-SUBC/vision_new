@@ -13,6 +13,7 @@ import datetime
 import yappi
 import threading
 
+#Experimentation with Yappi - python profiler
 yappi.set_clock_type("wall")
 yappi.start()
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
@@ -22,45 +23,61 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 #@TODO make the logs function
 
-
+#Worker thread - Recording
 class RecordThread(QThread, threading.Thread):
     def run(self):
+        #displays current datetime from datetime module 
         curr_time = datetime.datetime.now()
         curr_dir = Path(__file__).parent
         output_dir = os.path.join(curr_dir, "test_videos")
+        #generate output directory
         try:
             os.mkdir(output_dir)
+        #otherwise, the exception is to pass
         except:
             pass
-        
+
+        #Returns video from the first webcam of computer 
         cap = cv2.VideoCapture(0)
 
         # test whether or not the camera exists, if not reinstantiate it
         while cap.read()[0] == False:
             cap = cv2.VideoCapture(0)
 
-        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+        #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
+        #value of property is 1
+        #sets capture buffersize to 1 - number of samples (corresponds to the amount of time) it takes to handle i/o
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1) #buffersize of 1 is speedy? 
+        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) #Width of the frames in the video stream.
+        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #Height of the frames in the video stream. 
+            # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+        
+        #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
         
         while True:
-            ret, frame = cap.read()
+            #ret is a boolean variable that returns true if the frame is available
+            #frame is an image array vector captured based on the default frames
+                #per second defined
+            #checks if frame is read correctly
+            ret, frame = cap.read() #cap.read() returns a bool T/F
+            #if the frame is read correctly, ret == 1
             if ret:
-                future_time = datetime.datetime.now()
+                future_time = datetime.datetime.now() #future_time refers to current time
+                #the difference of current time evaluated and previous time when last frame was processed
                 if (future_time - curr_time).seconds <= 20*60:
+                    #write frames into videoWriter object
                     writer.write(frame)
                 else:
                     break
-
+#Worker thread 
 class Thread(QThread, threading.Thread):
     changePixmap = pyqtSignal(QImage)
     
     # def __init__(self, app):
     #     super(QThread, self).__init__()
     #     self.app = app
-        
+    
     def run(self):
         curr_time = datetime.datetime.now()
         curr_dir = Path(__file__).parent
@@ -78,25 +95,29 @@ class Thread(QThread, threading.Thread):
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
         
         while True:
+            #Returns if the task running on this thread should be stopped
             if self.isInterruptionRequested():
                 return
+
+            #checks if frame is properly read correctly
             ret, frame = cap.read()
             if ret:
                 future_time = datetime.datetime.now()
                 if (future_time - curr_time).seconds <= 20*60:
                     writer.write(frame)
                 # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
+
+            #*colour, image formate conversions*
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #applies colour modification on frame (src)
+                h, w, ch = rgbImage.shape 
                 bytesPerLine = ch * w
                 # print(contextPerserver.width, contextPerserver.height)
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
                 # writer.write(frame)
                 self.changePixmap.emit(p)
-                
-                    
-class App(QMainWindow):
+                         
+class App(QMainWindow): #MAIN THREAD
     def __init__(self, screensize):
         super().__init__()
         self.title = 'SUBC Vision Feed'
