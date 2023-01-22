@@ -121,7 +121,7 @@ class App(QMainWindow): #MAIN THREAD
     def __init__(self, screensize):
         super().__init__()
         self.title = 'SUBC Vision Feed'
-        self.screen = QApplication.primaryScreen()
+        self.screen = QApplication.primaryScreen() 
         self.windowsize = screensize
         self.videoLabel = videoFeed(self)
         self.videoOverlayStatic = videoOverlayStatic(self)
