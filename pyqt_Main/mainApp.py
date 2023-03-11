@@ -1,6 +1,5 @@
 import cv2
 import sys
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QSizePolicy, QScrollArea, QMessageBox, \
     QMainWindow, QMenu, QAction, qApp, QFileDialog, QHBoxLayout
 from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot, QRect, Qt, pyqtSignal, pyqtSlot

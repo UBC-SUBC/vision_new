@@ -1,0 +1,8 @@
+version: "3"
+services:
+  vision:
+    build: .
+    image: vision
+    container_name: vision
+    volumes:
+      - ./:/app
