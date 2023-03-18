@@ -6,3 +6,4 @@ services:
     container_name: vision
     volumes:
       - ./:/app
+
