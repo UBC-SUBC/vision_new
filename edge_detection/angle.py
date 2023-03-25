@@ -69,6 +69,9 @@ def calculate_angle(img):
                 # Calculate angle between two lines
                 angle_degrees = abs(theta * 180/np.pi)
                 
+                #If the current angle deviates more than the
+                #currently registed angle_max, set angle_max to
+                #the new value
                 if angle_degrees % 90 > angle_max % 90:
                     angle_max = angle_degrees
     # Add text to the image with the angle value
