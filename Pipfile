@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-# PyQt5 = "^5.15.6"
-# PyQt5 = "=5.15.2"
+# PyQt5 = "5.15.3"
+# PyQt5 = "5.15.6"
 opencv-python = "4.5.5"
 pyserial = "3.5"
 numpy = "1.23.2"
 [dev-packages]
 
 [requires]
-python_version = "3.8.5"
+python_version = "3.9"
