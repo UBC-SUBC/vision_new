@@ -3,7 +3,7 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QSizePolicy, QScrollArea, QMessageBox, \
     QMainWindow, QMenu, QAction, qApp, QFileDialog, QHBoxLayout
-from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot, QRect, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QThread, Qt, QRect, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
 import logging
 from pathlib import Path
@@ -13,36 +13,55 @@ import datetime
 import yappi
 import threading
 
+
 #Experimentation with Yappi - python profiler
 yappi.set_clock_type("wall")
 yappi.start()
+
+#Path(__file__) - file to the current running program 
+#mkdir - new path is created 
+#joinpath
+
+# New path is created - parent of the current file running joined \ with "logs"
+
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
+
+# Basic configuration for the logging system 
 logging.basicConfig(level=logging.DEBUG,
                     filename= Path(__file__).parent.joinpath('logs/logs_'+str(datetime.datetime.now().strftime("%Y_%m_%d-%I%M%S_%p"))+'.txt'),
                     filemode='a',
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
-#@TODO make the logs function
+
 
 #Worker thread - Recording
-class RecordThread(QThread, threading.Thread):
+#@TODO make the logs function 
+#Recording thread - saves frames for video capture
+class RecordThread(QThread):
     def run(self):
         #displays current datetime from datetime module 
         curr_time = datetime.datetime.now()
+
+        #sets the directory to the parent of the current directory
         curr_dir = Path(__file__).parent
+
+        #sets the output directory of recording thread inside "test_videos" of curr_dir
         output_dir = os.path.join(curr_dir, "test_videos")
-        #generate output directory
+        
+        
+        #Test creating a new directory with address output_dir. A pass is executed in the case of an exception. 
         try:
             os.mkdir(output_dir)
         #otherwise, the exception is to pass
         except:
             pass
 
-        #Returns video from the first webcam of computer 
-        cap = cv2.VideoCapture(0)
 
-        # test whether or not the camera exists, if not reinstantiate it
+        #Opens a camera for video capture
+        cap = cv2.VideoCapture(0)
+        # test whether or not the camera exists, if not reinstantiate it 
         while cap.read()[0] == False:
             cap = cv2.VideoCapture(0)
+
 
         #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
         #value of property is 1
@@ -54,14 +73,17 @@ class RecordThread(QThread, threading.Thread):
         
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
-        
+
+        #Loops over and saves all the frames in a video sequence
         while True:
+
             #ret is a boolean variable that returns true if the frame is available
             #frame is an image array vector captured based on the default frames
                 #per second defined
             #checks if frame is read correctly
             ret, frame = cap.read() #cap.read() returns a bool T/F
             #if the frame is read correctly, ret == 1
+
             if ret:
                 future_time = datetime.datetime.now() #future_time refers to current time
                 #the difference of current time evaluated and previous time when last frame was processed
@@ -70,14 +92,14 @@ class RecordThread(QThread, threading.Thread):
                     writer.write(frame)
                 else:
                     break
-#Worker thread 
-class Thread(QThread, threading.Thread):
+
+
+# suspect that the camera feed is linear. 
+# Displays the frames from RecordThread to video display 
+class Thread(QThread):
+
     changePixmap = pyqtSignal(QImage)
-    
-    # def __init__(self, app):
-    #     super(QThread, self).__init__()
-    #     self.app = app
-    
+
     def run(self):
         curr_time = datetime.datetime.now()
         curr_dir = Path(__file__).parent
@@ -91,9 +113,10 @@ class Thread(QThread, threading.Thread):
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
         
+        #Loops through frames and processes to display the video on screen
         while True:
             #Returns if the task running on this thread should be stopped
             if self.isInterruptionRequested():
@@ -111,13 +134,16 @@ class Thread(QThread, threading.Thread):
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #applies colour modification on frame (src)
                 h, w, ch = rgbImage.shape 
                 bytesPerLine = ch * w
-                # print(contextPerserver.width, contextPerserver.height)
+
+                #processing (converting) to Qt format to display the video on interface
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                #scale dimensions 
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
-                # writer.write(frame)
                 self.changePixmap.emit(p)
-                         
-class App(QMainWindow): #MAIN THREAD
+
+#initiates a window, app begins using multiple threads 
+class App(QMainWindow):
+    
     def __init__(self, screensize):
         super().__init__()
         self.title = 'SUBC Vision Feed'
@@ -151,7 +177,7 @@ class App(QMainWindow): #MAIN THREAD
                 )  # it is the Thread.__class__.__name__
                 yappi.get_func_stats(ctx_id=thread.id).print_all()
             self.close()
-        
+           
     def get_main_size(self):
         width = self.frameGeometry().width()
         height = self.frameGeometry().height()
@@ -170,6 +196,7 @@ class App(QMainWindow): #MAIN THREAD
         # self.videoLabel.update()
         # self.videoLabel.setScaledContents(True)
 
+
     def initUI(self):
         self.setFixedSize(self.windowsize)
         self.setWindowFlags(Qt.CustomizeWindowHint | Qt.FramelessWindowHint)
@@ -178,11 +205,13 @@ class App(QMainWindow): #MAIN THREAD
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
+
         # commenting out for testing - Arthur
-        #th_write = RecordThread(self)
-        #th_write.start()
+        th_write = RecordThread(self)
+        th_write.start()
         
         # self.showMaximized()
+
         self.get_main_size()
         self.setUpVideoFeedUi()
         self.show()
@@ -193,13 +222,14 @@ class App(QMainWindow): #MAIN THREAD
     #     self.videoLabel.resize(contextPerserver.width, contextPerserver.height)
     #     return super().resizeEvent(event)
     
+    
     def setUpVideoFeedUi(self):
         self.topRect = QRect(0, 0, contextPerserver.width, contextPerserver.height)
         self.videoOverlayStatic.setGeometry(self.topRect)
         self.videoLabel.setGeometry(self.topRect)
         self.videoOverlayActive.setGeometry(self.topRect)
-    
-    
+
+#sets up display for text and image
 class videoFeed(QLabel):
     frame_count = int(0)
     
@@ -213,11 +243,18 @@ class videoFeed(QLabel):
         #     self.frame_count = 0
         QLabel.paintEvent(self,event)
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
-    
+
+
+#NOTE: class videoOverlayStatic(Qlabel) handles non-changing components per frame - boarders, text, icons
+# class videoOverlayActive(Qlabel) handles components that are updated from data acquisition components, updated per frame - depth, speed, rpm, pitch, yaw
+
+
+#Contains all the methods related to the static components (i.e. boarders and icons) of the video feed
 class videoOverlayStatic(QLabel):
-    
     def __init__(self, parent=None):
         QLabel.__init__(self, parent)
+
+        #applies scaling for boarders per frame 
         self.height_scale = 0.02
         self.width_scale = 0.99
         self.left_quarter = contextPerserver.width * self.height_scale
@@ -228,6 +265,8 @@ class videoOverlayStatic(QLabel):
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
         self.center_square_width = 10
         self.center_square_height = 30
+
+        #displays battery and highbeam icons
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
@@ -238,7 +277,8 @@ class videoOverlayStatic(QLabel):
         self.speed = "0.0"
         self.depth = "0.0"
         self.timeBefore = datetime.datetime.now()
-        
+    
+    #reads in data from DAQ via json file 
     def getArduino(self):
         json = self.arduino.readJsonFromArduino()
         self.yaw = json["yaw"]
@@ -248,7 +288,7 @@ class videoOverlayStatic(QLabel):
         self.depth = json["depth"]
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
         
-    
+    #set boarder
     def paintOpaque(self, painter):
         painter.save()
         self.top_height = self.up_quarter*3
@@ -269,13 +309,14 @@ class videoOverlayStatic(QLabel):
         self.down_quarter = contextPerserver.height * self.width_scale
         self.top_mid_x = (self.left_quarter + self.right_quarter)/2
         self.right_mid_y = (self.up_quarter + self.down_quarter)/2
-        
+    
     def paintLines(self, painter):
         painter.save()
         painter.setPen(QPen(Qt.green, 4))
         painter.drawLine(self.left_quarter, self.up_quarter, self.right_quarter, self.up_quarter)
         painter.drawLine(self.right_quarter, self.up_quarter, self.right_quarter, self.down_quarter)
         painter.restore()
+    
     
     def paintMidSquares(self, painter):
         painter.save()
@@ -291,6 +332,7 @@ class videoOverlayStatic(QLabel):
         painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
         painter.restore()
     
+    #displays the middle squares located at the top and side (pitch and yaw)
     def paintMovingSquares(self, painter):
         painter.save()
         x_off_set = self.center_square_width * 0.5
@@ -303,18 +345,20 @@ class videoOverlayStatic(QLabel):
         painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
         painter.restore()
         
-        
+    #text displayer for the icons     
     def paintText(self, painter):
         painter.save()
         painter.setPen(QPen(Qt.green, 4))
         font_size = max(contextPerserver.width * contextPerserver.height / 69120, 16)
         painter.setFont(QFont("times", font_size))
         ###Draw the text
+        #pitch and yaw displayed on top and right side
         painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
                          QtCore.Qt.AlignCenter , "yaw")
         painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
+        #displays data drawn from DAQ
         painter.setPen(QPen(Qt.blue,4))
         painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
                          f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
@@ -347,6 +391,7 @@ class videoOverlayStatic(QLabel):
         
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
 
+# Contains components that are updated from data acquisition (pitch, yaw, rpm, depth, speed), updated per frame in video feed
 class videoOverlayActive(QLabel):
     
     def __init__(self, parent=None):
@@ -465,7 +510,7 @@ class videoOverlayActive(QLabel):
         
         self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
-    
+
     # def checkTime(self):
     #     time_now = datetime.datetime.now()
     #     logging.info(msg = "Time now========" + str(time_now))
@@ -504,15 +549,14 @@ class videoOverlayActive(QLabel):
         # print(self.left_quarter, self.right_quarter)
         
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
+
 class contextPerserver():
     width = 0
     height = 0
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     screensize = app.desktop().availableGeometry().size()
-
 
     ex = App(screensize)
     sys.exit(app.exec_())
