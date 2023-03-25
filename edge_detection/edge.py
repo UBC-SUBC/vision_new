@@ -7,9 +7,13 @@ def canny(frame):
     img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # Blur the image for better edge detection
     img_blur = cv2.GaussianBlur(img_gray, (3,3), 0)
+
+    #Applys Laplacian on image 
+    img_laplace = cv2.Laplacian(img_blur,ddepth=-1,scale=1,delta=0,borderType=cv2.BORDER_DEFAULT)
+
     # Canny Edge Detection
-    sigma = np.std(img_blur)
-    mean = np.mean(img_blur)
+    sigma = np.std(img_laplace)
+    mean = np.mean(img_laplace)
     lower = int(max(0, (mean - sigma)))
     upper = int(min(255, (mean + sigma)))
 
@@ -19,11 +23,16 @@ def canny(frame):
     #cv2.line(edges, (50, 100), (150, 100), (255,255,255), 1)
     #add_weight = cv2.addWeighted( frame, 0.5, edges, 0.5, 0.0) # blend src image with canny image
     new_image = cv2.add(frame, edges) # add src image with canny image
+
+#Experimentation: add special filters
+#Add a Laplacian Filter to enhance edge detection
+   # img_test = cv2.Laplacian(new_image,ksize=3, ddepth=cv2.CV_16S)
+
     # Display Canny Edge Detection Image
-    cv2.imshow('Canny Edge Detection',edges)
+    cv2.imshow('Canny Edge Detection',new_image)
 
 # define a video capture object
-vid = cv2.VideoCapture("20181212_123100.MOV")
+vid = cv2.VideoCapture("videoplayback.mp4")
   
 while(True):
       

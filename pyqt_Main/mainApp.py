@@ -10,12 +10,20 @@ from pathlib import Path
 import os
 from arduinoConnector import ArduinoConnector
 import datetime
+import yappi
+import threading
+
+
+#Experimentation with Yappi - python profiler
+yappi.set_clock_type("wall")
+yappi.start()
 
 #Path(__file__) - file to the current running program 
 #mkdir - new path is created 
 #joinpath
 
 # New path is created - parent of the current file running joined \ with "logs"
+
 Path.mkdir(Path(__file__).parent.joinpath("logs"), parents=True, exist_ok=True)
 
 # Basic configuration for the logging system 
@@ -24,12 +32,13 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='a',
                     format='%(levelname)s - %(asctime)s - %(message)s', datefmt="%d-%b-%y %H:%M:%S")
 
-#@TODO make the logs function 
 
+#Worker thread - Recording
+#@TODO make the logs function 
 #Recording thread - saves frames for video capture
 class RecordThread(QThread):
-    
     def run(self):
+        #displays current datetime from datetime module 
         curr_time = datetime.datetime.now()
 
         #sets the directory to the parent of the current directory
@@ -38,12 +47,15 @@ class RecordThread(QThread):
         #sets the output directory of recording thread inside "test_videos" of curr_dir
         output_dir = os.path.join(curr_dir, "test_videos")
         
+        
         #Test creating a new directory with address output_dir. A pass is executed in the case of an exception. 
         try:
             os.mkdir(output_dir)
+        #otherwise, the exception is to pass
         except:
             pass
-        
+
+
         #Opens a camera for video capture
         cap = cv2.VideoCapture(0)
         # test whether or not the camera exists, if not reinstantiate it 
@@ -51,22 +63,32 @@ class RecordThread(QThread):
             cap = cv2.VideoCapture(0)
 
 
-        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        #set frame width and height 
-        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-        #Sets up video writer: file path, path type, desired frame rate, width & height 
-        #Writes frames to mjpg file
+        #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
+        #value of property is 1
+        #sets capture buffersize to 1 - number of samples (corresponds to the amount of time) it takes to handle i/o
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1) #buffersize of 1 is speedy? 
+        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) #Width of the frames in the video stream.
+        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #Height of the frames in the video stream. 
+            # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+        
+        #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
         writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
 
         #Loops over and saves all the frames in a video sequence
         while True:
-            #cap.read() method returns a tuple, first element is bool
-            ret, frame = cap.read()
+
+            #ret is a boolean variable that returns true if the frame is available
+            #frame is an image array vector captured based on the default frames
+                #per second defined
+            #checks if frame is read correctly
+            ret, frame = cap.read() #cap.read() returns a bool T/F
+            #if the frame is read correctly, ret == 1
+
             if ret:
-                future_time = datetime.datetime.now()
+                future_time = datetime.datetime.now() #future_time refers to current time
+                #the difference of current time evaluated and previous time when last frame was processed
                 if (future_time - curr_time).seconds <= 20*60:
+                    #write frames into videoWriter object
                     writer.write(frame)
                 else:
                     break
@@ -96,14 +118,21 @@ class Thread(QThread):
         
         #Loops through frames and processes to display the video on screen
         while True:
+            #Returns if the task running on this thread should be stopped
+            if self.isInterruptionRequested():
+                return
+
+            #checks if frame is properly read correctly
             ret, frame = cap.read()
             if ret:
                 future_time = datetime.datetime.now()
                 if (future_time - curr_time).seconds <= 20*60:
                     writer.write(frame)
                 # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
+
+            #*colour, image formate conversions*
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #applies colour modification on frame (src)
+                h, w, ch = rgbImage.shape 
                 bytesPerLine = ch * w
 
                 #processing (converting) to Qt format to display the video on interface
@@ -112,19 +141,19 @@ class Thread(QThread):
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
                 self.changePixmap.emit(p)
 
-
 #initiates a window, app begins using multiple threads 
 class App(QMainWindow):
     
     def __init__(self, screensize):
         super().__init__()
         self.title = 'SUBC Vision Feed'
-        self.screen = QApplication.primaryScreen()
+        self.screen = QApplication.primaryScreen() 
         self.windowsize = screensize
         self.videoLabel = videoFeed(self)
         self.videoOverlayStatic = videoOverlayStatic(self)
         self.videoOverlayActive = videoOverlayActive(self)
         self.frame_count = 0
+        self.threads = []
         self.initUI()
     
     def keyPressEvent(self, event):
@@ -133,6 +162,20 @@ class App(QMainWindow):
         results in QMessageBox dialog from closeEvent, good but how/why?
         """
         if event.key() == Qt.Key_Q:
+            yappi.stop()
+            yappi.get_func_stats().print_all()
+            stats = yappi.get_thread_stats()
+            stats.sort("name", "ttot").print_all()
+            threads = yappi.get_thread_stats()
+            # for thread in self.threads:
+            #     thread.join()
+            #     thread.requestInterruption()
+            print('number of theads: ', len(threads))
+            for thread in threads:
+                print(
+                    "Function stats for (%s) (%d)" % (thread.name, thread.id)
+                )  # it is the Thread.__class__.__name__
+                yappi.get_func_stats(ctx_id=thread.id).print_all()
             self.close()
            
     def get_main_size(self):
@@ -162,7 +205,13 @@ class App(QMainWindow):
         th = Thread(self)
         th.changePixmap.connect(self.setImage)
         th.start()
+
+        # commenting out for testing - Arthur
+        th_write = RecordThread(self)
+        th_write.start()
         
+        # self.showMaximized()
+
         self.get_main_size()
         self.setUpVideoFeedUi()
         self.show()
