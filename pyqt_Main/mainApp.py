@@ -59,7 +59,7 @@ class RecordThread(QThread):
         #Opens a camera for video capture
         cap = cv2.VideoCapture(0)
         # test whether or not the camera exists, if not reinstantiate it 
-        while cap.read()[0] == False:
+        while cap.read()[0] == False or not cap.isOpened() or cap is None:
             cap = cv2.VideoCapture(0)
 
 
@@ -162,6 +162,7 @@ class App(QMainWindow):
         results in QMessageBox dialog from closeEvent, good but how/why?
         """
         if event.key() == Qt.Key_Q:
+            cv2.cvReleaseCapture(self.videoLabel.cap)
             yappi.stop()
             yappi.get_func_stats().print_all()
             stats = yappi.get_thread_stats()
