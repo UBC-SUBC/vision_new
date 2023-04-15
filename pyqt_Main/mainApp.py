@@ -12,6 +12,7 @@ from arduinoConnector import ArduinoConnector
 import datetime
 import yappi
 import threading
+import datetime
 
 
 #Experimentation with Yappi - python profiler
@@ -70,9 +71,23 @@ class RecordThread(QThread):
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) #Width of the frames in the video stream.
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #Height of the frames in the video stream. 
             # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+            
+            
+        # Get a list of all recordings in the folder
+        recordings = os.listdir(output_dir)
+
+        # Check if there are more than 3 files in the folder
+        if len(recordings) > 3:
+            # Sort the list of files by creation time
+            recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
+            # Get the oldest file
+            oldest_file = os.path.join(output_dir, recordings[0])
+            # Delete the oldest file
+            os.remove(oldest_file)
+        
         
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
-        writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+        writer= cv2.VideoWriter(os.path.join(output_dir, f'test_videos{datetime.datetime.now()}.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
 
         #Loops over and saves all the frames in a video sequence
         while True:
