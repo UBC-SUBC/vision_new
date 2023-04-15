@@ -76,8 +76,8 @@ class RecordThread(QThread):
         # Get a list of all recordings in the folder
         recordings = os.listdir(output_dir)
 
-        # Check if there are more than 3 files in the folder
-        if len(recordings) > 3:
+        # Check if there are more than 12 files in the folder
+        if len(recordings) > 12:
             # Sort the list of files by creation time
             recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
             # Get the oldest file
@@ -105,13 +105,15 @@ class RecordThread(QThread):
             #if the frame is read correctly, ret == 1
 
             if ret:
-                future_time = datetime.datetime.now() #future_time refers to current time
+#                future_time = datetime.datetime.now() #future_time refers to current time
                 #the difference of current time evaluated and previous time when last frame was processed
-                if (future_time - curr_time).seconds <= 20*60:
+                #if (future_time - curr_time).seconds <= 20*60:
+                #if (future_time - curr_time).seconds <= 60:
                     #write frames into videoWriter object
-                    writer.write(frame)
-                else:
-                    break
+
+                writer.write(frame)
+                #else:
+                 #   break
 
 
 # suspect that the camera feed is linear. 
