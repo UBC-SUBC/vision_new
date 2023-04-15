@@ -86,8 +86,11 @@ class RecordThread(QThread):
             os.remove(oldest_file)
         
         
+        # Define the filename format using strftime()
+        filename_format = "%Y-%m-%d_%H-%M-%S"
+        now = datetime.datetime.now().strftime(filename_format)
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
-        writer= cv2.VideoWriter(os.path.join(output_dir, f'test_videos{datetime.datetime.now()}.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+        writer= cv2.VideoWriter(os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi')) , cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
 
         #Loops over and saves all the frames in a video sequence
         while True:
