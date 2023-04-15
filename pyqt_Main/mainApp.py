@@ -59,9 +59,9 @@ class RecordThread(QThread):
 
         #Opens a camera for video capture
         cap = cv2.VideoCapture(-1)
-        # test whether or not the camera exists, if not reinstantiate it 
-        while cap.read()[0] == False or not cap.isOpened() or cap is None:
-            cap = cv2.VideoCapture(-1)
+        # # test whether or not the camera exists, if not reinstantiate it 
+        # while cap.read()[0] == False or not cap.isOpened() or cap is None:
+        #     cap = cv2.VideoCapture(-1)
 
 
         #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
