@@ -136,8 +136,29 @@ class Thread(QThread):
         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        writer= cv2.VideoWriter(os.path.join(output_dir, 'test_videos.avi'), cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
-        
+
+        # Get a list of all recordings in the folder
+        recordings = os.listdir(output_dir)
+
+        # Check if there are more than 12 files in the folder
+        if len(recordings) > 12:
+            # Sort the list of files by creation time
+            recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
+            # Get the oldest file
+            oldest_file = os.path.join(output_dir, recordings[0])
+            # Delete the oldest file
+            os.remove(oldest_file)
+
+
+        # Define the filename format using strftime()
+        filename_format = "%Y-%m-%d_%H-%M-%S"
+        now = datetime.datetime.now().strftime(filename_format)
+        #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
+        wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
+        print("Writing to: ", wrtie_to)
+        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+
+       
         #Loops through frames and processes to display the video on screen
         while True:
             #Returns if the task running on this thread should be stopped
@@ -147,9 +168,9 @@ class Thread(QThread):
             #checks if frame is properly read correctly
             ret, frame = cap.read()
             if ret:
-                future_time = datetime.datetime.now()
-                if (future_time - curr_time).seconds <= 20*60:
-                    writer.write(frame)
+                #future_time = datetime.datetime.now()
+                #if (future_time - curr_time).seconds <= 60:
+                writer.write(frame)
                 # https://stackoverflow.com/a/55468544/6622587
 
             #*colour, image formate conversions*
@@ -230,8 +251,8 @@ class App(QMainWindow):
         th.start()
 
         # commenting out for testing - Arthur
-        th_write = RecordThread(self)
-        th_write.start()
+        #th_write = RecordThread(self)
+        #th_write.start()
         
         # self.showMaximized()
 
