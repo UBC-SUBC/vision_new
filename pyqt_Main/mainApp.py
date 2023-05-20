@@ -242,7 +242,7 @@ class App(QMainWindow):
 
 
     def initUI(self):
-        # self.setFixedSize(self.windowsize)
+        self.setFixedSize(self.windowsize)
         self.setWindowFlags(Qt.CustomizeWindowHint | Qt.FramelessWindowHint)
         logging.info(msg = str(datetime.datetime.now()) + ' Initializing App UI')
         self.setWindowTitle(self.title)
@@ -257,8 +257,8 @@ class App(QMainWindow):
         # self.showMaximized()
         self.get_main_size()
         self.setUpVideoFeedUi()
-        # self.showMaximized()
         self.showFullScreen()
+        # self.showMaximized()
         # self.show()
         
         
@@ -601,7 +601,7 @@ class contextPerserver():
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    screensize = app.desktop().availableGeometry().size()
+    screensize = app.desktop().frameGeometry().size()
 
     ex = App(screensize)
     sys.exit(app.exec_())
