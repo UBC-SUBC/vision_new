@@ -255,8 +255,8 @@ class App(QMainWindow):
         #th_write.start()
         
         # self.showMaximized()
-        self.get_main_size()
-        self.setUpVideoFeedUi()
+        # self.get_main_size()
+        # self.setUpVideoFeedUi()
         # self.showMaximized()
         self.showFullScreen()
         # self.show()
