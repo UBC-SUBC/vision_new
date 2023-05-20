@@ -257,8 +257,8 @@ class App(QMainWindow):
         # self.showMaximized()
 
         self.get_main_size()
-        # self.setUpVideoFeedUi()
-        self.showMaximized()
+        self.setUpVideoFeedUi()
+        # self.showMaximized()
         self.show()
         
         
