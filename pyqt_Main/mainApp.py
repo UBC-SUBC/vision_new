@@ -255,11 +255,11 @@ class App(QMainWindow):
         #th_write.start()
         
         # self.showMaximized()
-        self.showFullScreen()
         self.get_main_size()
         self.setUpVideoFeedUi()
         # self.showMaximized()
-        self.show()
+        self.showFullScreen()
+        # self.show()
         
         
     # def resizeEvent(self, event) -> None:
