@@ -601,7 +601,7 @@ class contextPerserver():
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    screensize = app.desktop().frameGeometry().size()
+    screensize = app.desktop().availableGeometry().size()
 
     ex = App(screensize)
     sys.exit(app.exec_())
