@@ -1,18 +1,20 @@
-import cv2
-import sys
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QSizePolicy, QScrollArea, QMessageBox, \
-    QMainWindow, QMenu, QAction, qApp, QFileDialog, QHBoxLayout
-from PyQt5.QtCore import QThread, Qt, QRect, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QImage, QPixmap, QPixmap, QPalette, QPainter, QPen, QFont,QResizeEvent, QBrush, QColor
+import datetime
 import logging
-from pathlib import Path
 import os
-from arduinoConnector import ArduinoConnector
-import datetime
+import sys
+from pathlib import Path
+
+import cv2
 import yappi
-import threading
-import datetime
+from arduinoConnector import ArduinoConnector
+from PyQt5 import QtCore
+from PyQt5.QtCore import QRect, Qt, QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtGui import (QBrush, QColor, QFont, QImage, QPainter, QPalette,
+                         QPen, QPixmap, QResizeEvent)
+from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
+                             QLabel, QMainWindow, QMenu, QMessageBox,
+                             QScrollArea, QSizePolicy, QWidget, qApp)
+from Python_DAQ.imu import IMU_module
 
 
 #Experimentation with Yappi - python profiler
@@ -315,7 +317,7 @@ class videoOverlayStatic(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        self.arduino = ArduinoConnector()
+        self.imu = IMU_module()
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
@@ -323,15 +325,14 @@ class videoOverlayStatic(QLabel):
         self.depth = "0.0"
         self.timeBefore = datetime.datetime.now()
     
-    #reads in data from DAQ via json file 
-    def getArduino(self):
-        json = self.arduino.readJsonFromArduino()
-        self.yaw = json["yaw"]
-        self.pitch = json["pitch"]
-        self.rpm = json["rpm"]
-        self.speed = json["speed"]
-        self.depth = json["depth"]
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(json))
+    #reads in data from DAQ via outputDict file 
+    def getImu(self):
+        outputDict = self.imu.outputDict()
+        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        self.rpm = "99999"
+        self.speed = "99999"
+        self.depth = "99999"
+        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(outputDict))
         
     #set boarder
     def paintOpaque(self, painter):
@@ -456,7 +457,7 @@ class videoOverlayActive(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        self.arduino = ArduinoConnector()
+        self.imu = IMU_module()
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
@@ -464,13 +465,12 @@ class videoOverlayActive(QLabel):
         self.depth = "0.0"
         # self.timeBefore = datetime.datetime.now()
         self.arduino_fetch_counter = 0
-    def getArduino(self):
-        json = self.arduino.readJsonFromArduino()
-        self.yaw = json["yaw"]
-        self.pitch = json["pitch"]
-        self.rpm = json["rpm"]
-        self.speed = json["speed"]
-        self.depth = json["depth"]
+    def getImu(self):
+        outputDict = self.imu.outputDict()
+        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        self.rpm = "99999"
+        self.speed = "99999"
+        self.depth = "99999"
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
     
@@ -580,7 +580,7 @@ class videoOverlayActive(QLabel):
         if self.arduino_fetch_counter >= 100:
             print(self.arduino_fetch_counter)
             self.arduino_fetch_counter = 0
-            self.getArduino()
+            self.getImu()
         self.arduino_fetch_counter += 1
         self.updateParams()
         print("updating")

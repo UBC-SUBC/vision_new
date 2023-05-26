@@ -1,0 +1,3 @@
+[submodule "Python-DAQ"]
+	path = Python-DAQ
+	url = git@github.com:UBC-SUBC/Python-DAQ.git
