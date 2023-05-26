@@ -14,8 +14,11 @@ from PyQt5.QtGui import (QBrush, QColor, QFont, QImage, QPainter, QPalette,
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
                              QLabel, QMainWindow, QMenu, QMessageBox,
                              QScrollArea, QSizePolicy, QWidget, qApp)
-from ..Python_DAQ.imu import IMU_module
+from Python_DAQ.imu import IMU_module
 
+## Add parent to search path
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
 
 #Experimentation with Yappi - python profiler
 yappi.set_clock_type("wall")
