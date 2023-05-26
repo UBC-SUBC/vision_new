@@ -468,10 +468,10 @@ class videoOverlayActive(QLabel):
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         
         ## This try except block is to let you still be able to boot up the UI despite not having circuit python installed
-        try:
-            self.imu = IMU_module()
-        except  ModuleNotFoundError:
-            self.imu = IMU_module_dummy()
+        # try:
+        self.imu = IMU_module()
+        # except  ModuleNotFoundError:
+        #     self.imu = IMU_module_dummy()
             
         self.yaw = 0
         self.pitch = 0
