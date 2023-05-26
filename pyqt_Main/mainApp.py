@@ -325,7 +325,7 @@ class videoOverlayStatic(QLabel):
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         try:
             self.imu = IMU_module()
-        except:
+        except ModuleNotFoundError:
             self.imu = IMU_module_dummy()
         self.yaw = 0
         self.pitch = 0
@@ -334,14 +334,14 @@ class videoOverlayStatic(QLabel):
         self.depth = "0.0"
         self.timeBefore = datetime.datetime.now()
     
-    #reads in data from DAQ via outputDict file 
-    def getImu(self):
-        outputDict = self.imu.outputDict()
-        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
-        self.rpm = "99999"
-        self.speed = "99999"
-        self.depth = "99999"
-        logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(outputDict))
+    # #reads in data from DAQ via outputDict file 
+    # def getImu(self):
+    #     outputDict = self.imu.outputDict()
+    #     self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+    #     self.rpm = "99999"
+    #     self.speed = "99999"
+    #     self.depth = "99999"
+    #     logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino'+str(outputDict))
         
     #set boarder
     def paintOpaque(self, painter):
@@ -442,7 +442,7 @@ class videoOverlayStatic(QLabel):
         self.paintMovingSquares(painter)
         # self.paintText(painter) 
 
-        print(self.left_quarter, self.right_quarter)
+        # print(self.left_quarter, self.right_quarter)
         
         # painter.fillRect(QRect(right_quarter-15, up_quarter, center_square_width*2, down_quarter-up_quarter), Qt.green)
 
@@ -466,10 +466,13 @@ class videoOverlayActive(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
+        
+        ## This try except block is to let you still be able to boot up the UI despite not having circuit python installed
         try:
             self.imu = IMU_module()
-        except:
+        except  ModuleNotFoundError:
             self.imu = IMU_module_dummy()
+            
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
@@ -480,6 +483,7 @@ class videoOverlayActive(QLabel):
     def getImu(self):
         outputDict = self.imu.outputDict()
         self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        print(f"Yaw is {self.yaw}, pitch is {self.pitch}")
         self.rpm = "99999"
         self.speed = "99999"
         self.depth = "99999"
@@ -595,7 +599,7 @@ class videoOverlayActive(QLabel):
             self.getImu()
         self.arduino_fetch_counter += 1
         self.updateParams()
-        print("updating")
+        # print("updating")
         # self.paintOpaque(painter)
         # self.paintLines(painter)
         # self.paintImages(painter)
