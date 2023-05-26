@@ -14,7 +14,7 @@ from PyQt5.QtGui import (QBrush, QColor, QFont, QImage, QPainter, QPalette,
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
                              QLabel, QMainWindow, QMenu, QMessageBox,
                              QScrollArea, QSizePolicy, QWidget, qApp)
-from Python_DAQ.imu import IMU_module
+from ..Python_DAQ.imu import IMU_module
 
 
 #Experimentation with Yappi - python profiler
