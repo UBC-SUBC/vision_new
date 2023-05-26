@@ -4,6 +4,11 @@ import os
 import sys
 from pathlib import Path
 
+# Add parent to search path
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+print(parent_dir)
+sys.path.append(parent_dir)
+
 import cv2
 import yappi
 from arduinoConnector import ArduinoConnector
@@ -14,11 +19,9 @@ from PyQt5.QtGui import (QBrush, QColor, QFont, QImage, QPainter, QPalette,
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
                              QLabel, QMainWindow, QMenu, QMessageBox,
                              QScrollArea, QSizePolicy, QWidget, qApp)
-from Python_DAQ.imu import IMU_module
 
-## Add parent to search path
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(parent_dir)
+from Python_DAQ.imu import IMU_module, IMU_module_dummy
+
 
 #Experimentation with Yappi - python profiler
 yappi.set_clock_type("wall")
@@ -320,7 +323,10 @@ class videoOverlayStatic(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        self.imu = IMU_module()
+        try:
+            self.imu = IMU_module()
+        except:
+            self.imu = IMU_module_dummy()
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
@@ -460,7 +466,10 @@ class videoOverlayActive(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.parent, "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.parent, "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        self.imu = IMU_module()
+        try:
+            self.imu = IMU_module()
+        except:
+            self.imu = IMU_module_dummy()
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
