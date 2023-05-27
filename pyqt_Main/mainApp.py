@@ -500,8 +500,6 @@ class videoOverlayActive(QLabel):
             
                 
             
-            ## Now scale the the yaw so at 180 degrees, the yaw value is 1 and -1 at 181 degrees
-            self.yaw = self.yaw/180
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
