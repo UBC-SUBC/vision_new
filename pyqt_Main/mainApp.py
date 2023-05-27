@@ -323,15 +323,15 @@ class videoOverlayStatic(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        try:
-            self.imu = IMU_module()
-        except ModuleNotFoundError:
-            self.imu = IMU_module_dummy()
-        self.yaw = 0
-        self.pitch = 0
-        self.rpm = "0.0"
-        self.speed = "0.0"
-        self.depth = "0.0"
+        # try:
+        #     self.imu = IMU_module()
+        # except ModuleNotFoundError:
+        #     self.imu = IMU_module_dummy()
+        # self.yaw = 0
+        # self.pitch = 0
+        # self.rpm = "0.0"
+        # self.speed = "0.0"
+        # self.depth = "0.0"
         self.timeBefore = datetime.datetime.now()
     
     # #reads in data from DAQ via outputDict file 
@@ -482,7 +482,12 @@ class videoOverlayActive(QLabel):
         self.imu_fetch_counter = 0
     def getImu(self):
         outputDict = self.imu.outputDict()
-        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][2]
+        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        
+        ## Convert to plotting size
+        if self.yaw is not None:
+            ## Check in the 4th quadrant or first. Then normalize it
+            self.yaw = 360 - self.yaw if self.yaw >= 270 else self.yaw
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
