@@ -483,6 +483,7 @@ class videoOverlayActive(QLabel):
     def getImu(self):
         outputDict = self.imu.outputDict()
         self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        print(f"RAW Yaw is {self.yaw}, RAW pitch is {self.pitch}")
         
         ## Convert to plotting size
         if self.yaw is not None:
