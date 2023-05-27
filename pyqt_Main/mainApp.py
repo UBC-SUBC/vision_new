@@ -482,7 +482,7 @@ class videoOverlayActive(QLabel):
         self.imu_fetch_counter = 0
     def getImu(self):
         outputDict = self.imu.outputDict()
-        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][2]
         
         ## Convert to plotting size
         if self.yaw is not None:
@@ -498,8 +498,11 @@ class videoOverlayActive(QLabel):
                 self.yaw = self.yaw/90 * 0.2
                 self.yaw = 0.8 + self.yaw if self.yaw > 0 else -0.8 + self.yaw
             
+        
+        
                 
             
+        
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
