@@ -387,36 +387,36 @@ class videoOverlayStatic(QLabel):
         painter.fillRect(QRect(self.right_quarter,self.right_mid_y, self.center_square_height,self.center_square_width), Qt.green)
         painter.restore()
     
-    #displays the middle squares located at the top and side (pitch and yaw)
-    def paintMovingSquares(self, painter):
-        painter.save()
-        x_off_set = self.center_square_width * 0.5
-        y_off_set = self.center_square_height * 0.5
-        painter.setPen(QPen(Qt.black, 4))
-        painter.translate(-x_off_set, -y_off_set)
-        painter.fillRect(QRect(self.top_mid_x + (self.yaw/100 * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
-        painter.resetTransform()
-        painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
-        painter.restore()
+    # #displays the middle squares located at the top and side (pitch and yaw)
+    # def paintMovingSquares(self, painter):
+    #     painter.save()
+    #     x_off_set = self.center_square_width * 0.5
+    #     y_off_set = self.center_square_height * 0.5
+    #     painter.setPen(QPen(Qt.black, 4))
+    #     painter.translate(-x_off_set, -y_off_set)
+    #     painter.fillRect(QRect(self.top_mid_x + (self.yaw/100 * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
+    #     painter.resetTransform()
+    #     painter.translate(-y_off_set, -x_off_set)
+    #     painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
+    #     painter.restore()
         
     #text displayer for the icons     
-    def paintText(self, painter):
-        painter.save()
-        painter.setPen(QPen(Qt.green, 4))
-        font_size = max(contextPerserver.width * contextPerserver.height / 69120, 16)
-        painter.setFont(QFont("times", font_size))
-        ###Draw the text
-        #pitch and yaw displayed on top and right side
-        painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
-                         QtCore.Qt.AlignCenter , "yaw")
-        painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
-                         Qt.AlignCenter, "p\ni\nt\nc\nh")
+    # def paintText(self, painter):
+    #     painter.save()
+    #     painter.setPen(QPen(Qt.green, 4))
+    #     font_size = max(contextPerserver.width * contextPerserver.height / 69120, 16)
+    #     painter.setFont(QFont("times", font_size))
+    #     ###Draw the text
+    #     #pitch and yaw displayed on top and right side
+    #     painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
+    #                      QtCore.Qt.AlignCenter , "yaw")
+    #     painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
+    #                      Qt.AlignCenter, "p\ni\nt\nc\nh")
         
-        #displays data drawn from DAQ
-        painter.setPen(QPen(Qt.blue,4))
-        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
-                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
+    #     #displays data drawn from DAQ
+    #     painter.setPen(QPen(Qt.blue,4))
+    #     painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
+    #                      f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
 
         # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
@@ -439,7 +439,7 @@ class videoOverlayStatic(QLabel):
         self.paintLines(painter)
         self.paintImages(painter)
         self.paintMidSquares(painter)
-        self.paintMovingSquares(painter)
+        # self.paintMovingSquares(painter)
         # self.paintText(painter) 
 
         # print(self.left_quarter, self.right_quarter)
@@ -479,10 +479,15 @@ class videoOverlayActive(QLabel):
         self.speed = "0.0"
         self.depth = "0.0"
         # self.timeBefore = datetime.datetime.now()
-        self.arduino_fetch_counter = 0
+        self.imu_fetch_counter = 0
     def getImu(self):
         outputDict = self.imu.outputDict()
-        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
+        self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][2]
+        
+        ## Don't crash the ui
+        self.yaw = 0 if self.yaw is None else self.yaw
+        self.pitch = 0 if self.pitch is None else self.pitch
+        
         print(f"Yaw is {self.yaw}, pitch is {self.pitch}")
         self.rpm = "99999"
         self.speed = "99999"
@@ -593,11 +598,11 @@ class videoOverlayActive(QLabel):
         QLabel.paintEvent(self,event)
         painter = QPainter(self)
         # print(self.checkTime(), "curr time========")
-        if self.arduino_fetch_counter >= 5:
-            print(self.arduino_fetch_counter)
-            self.arduino_fetch_counter = 0
+        if self.imu_fetch_counter >= 5:
+            print(self.imu_fetch_counter)
+            self.imu_fetch_counter = 0
             self.getImu()
-        self.arduino_fetch_counter += 1
+        self.imu_fetch_counter += 1
         self.updateParams()
         # print("updating")
         # self.paintOpaque(painter)
