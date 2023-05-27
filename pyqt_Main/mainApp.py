@@ -487,7 +487,7 @@ class videoOverlayActive(QLabel):
         ## Convert to plotting size
         if self.yaw is not None:
             ## Check in the 4th quadrant or first. Then normalize it
-            self.yaw = 360 - self.yaw if self.yaw >= 270 else self.yaw
+            self.yaw = self.yaw - 360 if self.yaw >= 270 else self.yaw
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
