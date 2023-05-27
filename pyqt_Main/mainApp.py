@@ -486,8 +486,22 @@ class videoOverlayActive(QLabel):
         
         ## Convert to plotting size
         if self.yaw is not None:
-            ## Check in the 4th quadrant or first. Then normalize it
-            self.yaw = self.yaw - 360 if self.yaw >= 270 else self.yaw
+            ## We want 3rd and 4th quadrant to be negative and 1st and 2nd quadrant to be postitive
+            self.yaw = self.yaw - 360 if self.yaw > 180 else self.yaw
+            
+            ## Only reserve the last 20% for greater than 90 degrees (should be impossible)
+            if abs(self.yaw) <= 90:
+                self.yaw = self.yaw/90 * 0.8
+            else:
+                ## Find how my of the 2nd and 3rd quarant yaw fills up, then apply scaling
+                self.yaw = self.yaw/2
+                self.yaw = self.yaw/90 * 0.2
+                self.yaw = 0.8 + self.yaw
+            
+                
+            
+            ## Now scale the the yaw so at 180 degrees, the yaw value is 1 and -1 at 181 degrees
+            self.yaw = self.yaw/180
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
@@ -549,7 +563,7 @@ class videoOverlayActive(QLabel):
         y_off_set = self.center_square_height * 0.5
         painter.setPen(QPen(Qt.black, 4))
         painter.translate(-x_off_set, -y_off_set)
-        painter.fillRect(QRect(self.top_mid_x + (self.yaw/100 * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
+        painter.fillRect(QRect(self.top_mid_x + (self.yaw * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
         painter.resetTransform()
         painter.translate(-y_off_set, -x_off_set)
         painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
