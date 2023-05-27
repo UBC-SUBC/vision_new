@@ -390,7 +390,7 @@ class videoOverlayStatic(QLabel):
     # #displays the middle squares located at the top and side (pitch and yaw)
     # def paintMovingSquares(self, painter):
     #     painter.save()
-    #     x_off_set = self.center_square_width * 0.5
+    #     x_off_set = self.center_square_width * 0.5q
     #     y_off_set = self.center_square_height * 0.5
     #     painter.setPen(QPen(Qt.black, 4))
     #     painter.translate(-x_off_set, -y_off_set)
@@ -413,15 +413,15 @@ class videoOverlayStatic(QLabel):
     #     painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
     #                      Qt.AlignCenter, "p\ni\nt\nc\nh")
         
-    #     #displays data drawn from DAQ
-    #     painter.setPen(QPen(Qt.blue,4))
-    #     painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
-    #                      f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
+    # #     #displays data drawn from DAQ
+    # #     painter.setPen(QPen(Qt.blue,4))
+    # #     painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft,
+    # #                      f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
 
-        # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
-        # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
+    #     # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
+    #     # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         
-        painter.restore()
+    #     painter.restore()
     
     def paintImages(self, painter):
         self.battery_img = self.battery_img.scaled(contextPerserver.width*0.04, self.top_height)
@@ -468,10 +468,10 @@ class videoOverlayActive(QLabel):
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         
         ## This try except block is to let you still be able to boot up the UI despite not having circuit python installed
-        # try:
-        self.imu = IMU_module()
-        # except  ModuleNotFoundError:
-        #     self.imu = IMU_module_dummy()
+        try:
+            self.imu = IMU_module()
+        except  ModuleNotFoundError:
+            self.imu = IMU_module_dummy()
             
         self.yaw = 0
         self.pitch = 0
