@@ -483,7 +483,6 @@ class videoOverlayActive(QLabel):
     def getImu(self):
         outputDict = self.imu.outputDict()
         self.yaw,self.pitch = outputDict["euler"][0],outputDict["euler"][1]
-        print(f"Raw Yaw is {self.yaw}")
         
         ## Convert to plotting size
         if self.yaw is not None:
@@ -497,7 +496,7 @@ class videoOverlayActive(QLabel):
                 ## Find how my of the 2nd and 3rd quarant yaw fills up, then apply scaling
                 self.yaw = self.yaw/2
                 self.yaw = self.yaw/90 * 0.2
-                self.yaw = 0.8 + self.yaw
+                self.yaw = 0.8 + self.yaw if self.yaw > 0 else -0.8 + self.yaw
             
                 
             
