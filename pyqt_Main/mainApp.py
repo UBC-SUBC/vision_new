@@ -433,8 +433,8 @@ class videoOverlayStatic(QLabel):
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
 
         if not self.imu_status:
-            self.imu_img = self.imu_img.scaled(contextPerserver.width*0.05, self.top_height)
-            painter.drawPixmap(contextPerserver.width*0.14,self.bot_height, QPixmap.fromImage(self.imu_img))
+            self.imu_image = self.imu_image.scaled(contextPerserver.width*0.05, self.top_height)
+            painter.drawPixmap(contextPerserver.width*0.14,self.bot_height, QPixmap.fromImage(self.imu_image))
     
     def paintEvent(self, event):
         QLabel.paintEvent(self,event)
