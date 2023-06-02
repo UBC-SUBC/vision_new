@@ -492,6 +492,7 @@ class videoOverlayActive(QLabel):
         print(f"RAW Yaw is {self.yaw}, RAW pitch is {self.pitch}")
         
         ## Convert to plotting size
+        ## Range of self.yaw is 0-360 turinig clockwise increases
         if self.yaw is not None:
             ## We want 3rd and 4th quadrant to be negative and 1st and 2nd quadrant to be postitive
             self.yaw = self.yaw - 360 if self.yaw > 180 else self.yaw
@@ -506,8 +507,10 @@ class videoOverlayActive(QLabel):
                 self.yaw = 0.8 + self.yaw if self.yaw > 0 else -0.8 + self.yaw
             
         
-        
-                
+        ## Covert to pitch plotting size
+        ## Range of self.pitch is -180 to 180 increase with inclination
+        if self.pitch is not None:
+            self.pitch = self.pitch/90 ## This is assuming we will not go over 90 degrees. Because if we do, we screwed up
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
@@ -572,7 +575,7 @@ class videoOverlayActive(QLabel):
         painter.fillRect(QRect(self.top_mid_x + (self.yaw * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
         painter.resetTransform()
         painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch/100 * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
+        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
         painter.restore()
         
         
