@@ -475,7 +475,8 @@ class videoOverlayActive(QLabel):
         ## This try except block is to let you still be able to boot up the UI despite not having circuit python installed
         try:
             self.imu = IMU_module()
-        except  ModuleNotFoundError:
+        except Exception as e:
+            print(e)
             self.imu = IMU_module_dummy()
             
         self.yaw = 0
