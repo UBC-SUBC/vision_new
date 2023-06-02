@@ -322,11 +322,13 @@ class videoOverlayStatic(QLabel):
         #displays battery and highbeam icons
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
+        self.imu_image = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "IMU_Warning.png"))
+        self.imu_status = True
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
-        # try:
-        #     self.imu = IMU_module()
-        # except ModuleNotFoundError:
-        #     self.imu = IMU_module_dummy()
+        try:
+            IMU_module()
+        except:
+            self.imu_status = False
         # self.yaw = 0
         # self.pitch = 0
         # self.rpm = "0.0"
@@ -429,7 +431,10 @@ class videoOverlayStatic(QLabel):
         
         self.beam_img = self.beam_img.scaled(contextPerserver.width*0.03, self.top_height)
         painter.drawPixmap(contextPerserver.width*0.08,self.bot_height, QPixmap.fromImage(self.beam_img))
-    
+
+        if not self.imu_status:
+            self.imu_img = self.imu_img.scaled(contextPerserver.width*0.05, self.top_height)
+            painter.drawPixmap(contextPerserver.width*0.14,self.bot_height, QPixmap.fromImage(self.imu_img))
     
     def paintEvent(self, event):
         QLabel.paintEvent(self,event)
