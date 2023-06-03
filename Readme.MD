@@ -23,3 +23,12 @@ Solution: As such we are going to be using the Pipenv package manager for Python
 #### Setup Steps
 1. Go to your terminal and make sure you have Python installed
 2. 
+
+
+### I2C externals
+
+#### VERY IMPORT PLEASE READ THIS FOR SETUP
+Right now the Pi needs to support 2 external i2c devices. We will use the default SDA and SLA (pin 3 pin 5) as well as converting general purpose GPIO to SDA and SLA (i2c6 which are pin 15 and pin 16).
+
+- The Bno055 IMU has internal pull up resistor, so it can connect to i2c6 on the PI (pin 15 and 16)
+- The Bar30 has to connect to the primary bus (pin3 and pin5) because it does not have internal pull up resistor.
