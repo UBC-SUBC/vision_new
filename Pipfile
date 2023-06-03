@@ -15,3 +15,7 @@ yappi = "*"
 
 [requires]
 python_version = "3.9"
+
+[rasp]
+adafruit-circuitpython-bno055 = "*"
+smbus2 = "*"
