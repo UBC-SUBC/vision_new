@@ -530,7 +530,7 @@ class videoOverlayActive(QLabel):
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
     def getDepth(self):
-        self.salt_depth , self.fresh_depth = self.depth_sensor.outputDict()["salt_depth"], self.depth_sensor.outputDict()["fresh_depth"]
+        self.salt_depth , self.fresh_depth = round(self.depth_sensor.outputDict()["salt_depth"],2), round(self.depth_sensor.outputDict()["fresh_depth"],2)
     # def paintOpaque(self, painter):
     #     painter.save()
     #     self.top_height = self.up_quarter*3
@@ -599,9 +599,9 @@ class videoOverlayActive(QLabel):
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
         painter.setPen(QPen(Qt.blue,4))
-        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , 
-                               contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
-                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
+        # painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , 
+        #                        contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
+        #                  f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
         painter.drawText(QRect(contextPerserver.width*0.3, (contextPerserver.height + self.bot_height) , 
                                contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
                          f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
