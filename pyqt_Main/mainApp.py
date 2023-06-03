@@ -580,10 +580,10 @@ class videoOverlayActive(QLabel):
         y_off_set = self.center_square_height * 0.5
         painter.setPen(QPen(Qt.black, 4))
         painter.translate(-x_off_set, -y_off_set)
-        painter.fillRect(QRect(self.top_mid_x + (self.yaw * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.black)
+        painter.fillRect(QRect(self.top_mid_x + (self.yaw * (self.right_quarter-self.top_mid_x)),self.up_quarter, self.center_square_width, self.center_square_height), Qt.blue)
         painter.resetTransform()
         painter.translate(-y_off_set, -x_off_set)
-        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.black)
+        painter.fillRect(QRect(self.right_quarter,self.right_mid_y + (self.pitch * (self.down_quarter- self.right_mid_y)), self.center_square_height,self.center_square_width), Qt.blue)
         painter.restore()
         
         
@@ -595,7 +595,7 @@ class videoOverlayActive(QLabel):
         ###Draw the text
         painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
                          QtCore.Qt.AlignCenter , "yaw")
-        painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
+        painter.drawText(QRect(self.right_quarter-40, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
         painter.setPen(QPen(Qt.green,4))
