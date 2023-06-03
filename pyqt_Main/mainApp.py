@@ -602,6 +602,9 @@ class videoOverlayActive(QLabel):
         painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , 
                                contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
                          f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
+        painter.drawText(QRect(contextPerserver.width*0.3, (contextPerserver.height + self.bot_height) , 
+                               contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
+                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
 
         # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
@@ -640,7 +643,7 @@ class videoOverlayActive(QLabel):
             print(self.imu_fetch_counter)
             self.imu_fetch_counter = 0
             self.getImu()
-            self.getDepth
+            self.getDepth()
         self.imu_fetch_counter += 1
         self.updateParams()
         # print("updating")
