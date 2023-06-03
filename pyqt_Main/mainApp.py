@@ -352,7 +352,7 @@ class videoOverlayStatic(QLabel):
         self.top_height = self.up_quarter*3
         right_x = contextPerserver.width-self.left_quarter*2
         self.bot_height = contextPerserver.height -  self.top_height
-        painter.setOpacity(0.3)
+        painter.setOpacity(0.6)
         painter.setBrush(QBrush(Qt.black))
         painter.setPen(QPen(Qt.transparent))
         painter.drawRect(QRect(0, 0, contextPerserver.width,self.top_height ))
@@ -525,8 +525,8 @@ class videoOverlayActive(QLabel):
         self.pitch = 0 if self.pitch is None else self.pitch
         
         print(f"Yaw is {self.yaw}, pitch is {self.pitch}")
-        self.rpm = "99999"
-        self.speed = "99999"
+        self.rpm = "9999"
+        self.speed = "9999"
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
     def getDepth(self):
