@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
                              QScrollArea, QSizePolicy, QWidget, qApp)
 
 from Python_DAQ.imu import IMU_module, IMU_module_dummy
+from Python_DAQ.depth_sensor import Depth_Sensor, Dummy_Depth_Sensor
 
 
 #Experimentation with Yappi - python profiler
@@ -478,12 +479,19 @@ class videoOverlayActive(QLabel):
         except Exception as e:
             print(e)
             self.imu = IMU_module_dummy()
-            
+        
+        try:
+            self.depth_sensor = Depth_Sensor()
+        except Exception as e:
+            print(e)
+            self.depth_sensor = Dummy_Depth_Sensor()
+        
         self.yaw = 0
         self.pitch = 0
         self.rpm = "0.0"
         self.speed = "0.0"
-        self.depth = "0.0"
+        self.salt_depth = 0
+        self.fresh_depth = 0
         # self.timeBefore = datetime.datetime.now()
         self.imu_fetch_counter = 0
     def getImu(self):
@@ -519,10 +527,10 @@ class videoOverlayActive(QLabel):
         print(f"Yaw is {self.yaw}, pitch is {self.pitch}")
         self.rpm = "99999"
         self.speed = "99999"
-        self.depth = "99999"
         logging.info(msg = str(datetime.datetime.now()) + ' JSON Received from Arduino')
         
-    
+    def getDepth(self):
+        self.salt_depth , self.fresh_depth = self.depth_sensor.outputDict()["salt_depth"], self.depth_sensor.outputDict()["fresh_depth"]
     # def paintOpaque(self, painter):
     #     painter.save()
     #     self.top_height = self.up_quarter*3
@@ -591,7 +599,9 @@ class videoOverlayActive(QLabel):
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
         painter.setPen(QPen(Qt.blue,4))
-        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Depth:{self.depth}m")
+        painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , 
+                               contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
+                         f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
 
         # painter.drawText(QRect(contextPerserver.width*0.6, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
         # painter.drawText(QRect(contextPerserver.width*0.8, self.bot_height +10, self.right_quarter-self.left_quarter, self.center_square_height*2), "RPM:31 rpm")
@@ -630,6 +640,7 @@ class videoOverlayActive(QLabel):
             print(self.imu_fetch_counter)
             self.imu_fetch_counter = 0
             self.getImu()
+            self.getDepth
         self.imu_fetch_counter += 1
         self.updateParams()
         # print("updating")
