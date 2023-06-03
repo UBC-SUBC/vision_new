@@ -510,7 +510,7 @@ class videoOverlayActive(QLabel):
         ## Covert to pitch plotting size
         ## Range of self.pitch is -180 to 180 increase with inclination
         if self.pitch is not None:
-            self.pitch = self.pitch/90 ## This is assuming we will not go over 90 degrees. Because if we do, we screwed up
+            self.pitch = -self.pitch/90 ## This is assuming we will not go over 90 degrees. Because if we do, we screwed up
         
         ## Don't crash the ui
         self.yaw = 0 if self.yaw is None else self.yaw
