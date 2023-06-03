@@ -595,7 +595,7 @@ class videoOverlayActive(QLabel):
         ###Draw the text
         painter.drawText(QRect(self.left_quarter, self.up_quarter-5, self.right_quarter-self.left_quarter, self.center_square_height*2), 
                          QtCore.Qt.AlignCenter , "yaw")
-        painter.drawText(QRect(self.right_quarter-35x, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
+        painter.drawText(QRect(self.right_quarter-35, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
         painter.setPen(QPen(Qt.green,4))
