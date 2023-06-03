@@ -598,7 +598,7 @@ class videoOverlayActive(QLabel):
         painter.drawText(QRect(self.right_quarter-45, self.up_quarter, self.center_square_width*2, self.down_quarter-self.up_quarter),
                          Qt.AlignCenter, "p\ni\nt\nc\nh")
         
-        painter.setPen(QPen(Qt.black,4))
+        painter.setPen(QPen(Qt.green,4))
         # painter.drawText(QRect(contextPerserver.width*0.4, (contextPerserver.height + self.bot_height)/2 , 
         #                        contextPerserver.width, contextPerserver.height-self.bot_height), Qt.AlignLeft, 
         #                  f"RPM:{self.rpm}rpm     Speed:{self.speed}m/s     Salt depth:{self.salt_depth}m     Fresh depth:{self.fresh_depth}m")
