@@ -324,12 +324,21 @@ class videoOverlayStatic(QLabel):
         self.battery_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbatt.png"))
         self.beam_img = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "highbeams.png"))
         self.imu_image = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "IMU_Warning.png"))
+        self.depth_image = QImage(os.path.join(Path(__file__).parent.joinpath("Images"), "depth_sensor_warning.png"))
         self.imu_status = True
+        self.depth_status = True
         # print(os.path.join(Path(__file__).parent.parent, "highbatt.png"), "this is loc")
         try:
             IMU_module()
         except:
             self.imu_status = False
+        
+        try:
+            Depth_Sensor()
+        except:
+            self.depth_status = False
+            
+        
         # self.yaw = 0
         # self.pitch = 0
         # self.rpm = "0.0"
@@ -435,7 +444,11 @@ class videoOverlayStatic(QLabel):
 
         if not self.imu_status:
             self.imu_image = self.imu_image.scaled(contextPerserver.width*0.04, self.top_height)
-            painter.drawPixmap(contextPerserver.width*0.14,self.bot_height, QPixmap.fromImage(self.imu_image))
+            painter.drawPixmap(contextPerserver.width*0.12,self.bot_height, QPixmap.fromImage(self.imu_image))
+
+        if not self.depth_status:
+            self.depth_image = self.depth_image.scaled(contextPerserver.width*0.04, self.top_height)
+            painter.drawPixmap(contextPerserver.width*0.16,self.bot_height, QPixmap.fromImage(self.depth_image))
     
     def paintEvent(self, event):
         QLabel.paintEvent(self,event)
