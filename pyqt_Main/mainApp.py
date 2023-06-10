@@ -3,7 +3,6 @@ import logging
 import os
 import sys
 from pathlib import Path
-import time
 
 # Add parent to search path
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -164,9 +163,9 @@ class Thread(QThread):
         filename_format = "%Y-%m-%d_%H-%M-%S"
         now = datetime.datetime.now().strftime(filename_format)
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
-        wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.mp4'))
+        wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
         print("Writing to: ", wrtie_to)
-        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc(*"mp4v"), 60, (int(cap.get(3)),int(cap.get(4))))
+        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 30, (int(cap.get(3)),int(cap.get(4))))
 
        
         #Loops through frames and processes to display the video on screen
@@ -193,7 +192,6 @@ class Thread(QThread):
                 #scale dimensions 
                 p = convertToQtFormat.scaled(contextPerserver.width, contextPerserver.height)
                 self.changePixmap.emit(p)
-            time.sleep(16/1000) #16ms delay between frames, 60fps
 
 #initiates a window, app begins using multiple threads 
 class App(QMainWindow):
