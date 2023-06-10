@@ -166,7 +166,7 @@ class Thread(QThread):
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
         wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
         print("Writing to: ", wrtie_to)
-        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 15, (int(cap.get(3)),int(cap.get(4))))
+        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 12, (int(cap.get(3)),int(cap.get(4))))
         ##Sleep to acheive 60fps
         time.sleep(60/1000)
        
