@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+import time
 
 # Add parent to search path
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -46,83 +47,83 @@ logging.basicConfig(level=logging.DEBUG,
 #Worker thread - Recording
 #@TODO make the logs function 
 #Recording thread - saves frames for video capture
-class RecordThread(QThread):
-    def run(self):
-        #displays current datetime from datetime module 
-        curr_time = datetime.datetime.now()
+# class RecordThread(QThread):
+#     def run(self):
+#         #displays current datetime from datetime module 
+#         curr_time = datetime.datetime.now()
 
-        #sets the directory to the parent of the current directory
-        curr_dir = Path(__file__).parent
+#         #sets the directory to the parent of the current directory
+#         curr_dir = Path(__file__).parent
 
-        #sets the output directory of recording thread inside "test_videos" of curr_dir
-        output_dir = os.path.join(curr_dir, "test_videos")
+#         #sets the output directory of recording thread inside "test_videos" of curr_dir
+#         output_dir = os.path.join(curr_dir, "test_videos")
         
         
-        #Test creating a new directory with address output_dir. A pass is executed in the case of an exception. 
-        try:
-            os.mkdir(output_dir)
-        #otherwise, the exception is to pass
-        except:
-            pass
+#         #Test creating a new directory with address output_dir. A pass is executed in the case of an exception. 
+#         try:
+#             os.mkdir(output_dir)
+#         #otherwise, the exception is to pass
+#         except:
+#             pass
 
 
-        #Opens a camera for video capture
-        cap = cv2.VideoCapture(-1)
-        # # test whether or not the camera exists, if not reinstantiate it 
-        # while cap.read()[0] == False or not cap.isOpened() or cap is None:
-        #     cap = cv2.VideoCapture(-1)
+#         #Opens a camera for video capture
+#         cap = cv2.VideoCapture(-1)
+#         # # test whether or not the camera exists, if not reinstantiate it 
+#         # while cap.read()[0] == False or not cap.isOpened() or cap is None:
+#         #     cap = cv2.VideoCapture(-1)
 
 
-        #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
-        #value of property is 1
-        #sets capture buffersize to 1 - number of samples (corresponds to the amount of time) it takes to handle i/o
-        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1) #buffersize of 1 is speedy? 
-        width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) #Width of the frames in the video stream.
-        height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #Height of the frames in the video stream. 
-            # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
+#         #cv2.CAP_PROP_BUFFERSIZE refers to a property identifier
+#         #value of property is 1
+#         #sets capture buffersize to 1 - number of samples (corresponds to the amount of time) it takes to handle i/o
+#         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1) #buffersize of 1 is speedy? 
+#         width= int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) #Width of the frames in the video stream.
+#         height= int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #Height of the frames in the video stream. 
+#             # writer = cv2.VideoWriter(os.path.join(output_dir, 'test_videos.mp4'), cv2.VideoWriter_fourcc(*'H264'), 20, (width,height))
             
             
-        # Get a list of all recordings in the folder
-        recordings = os.listdir(output_dir)
+#         # Get a list of all recordings in the folder
+#         recordings = os.listdir(output_dir)
 
-        # Check if there are more than 12 files in the folder
-        if len(recordings) > 12:
-            # Sort the list of files by creation time
-            recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
-            # Get the oldest file
-            oldest_file = os.path.join(output_dir, recordings[0])
-            # Delete the oldest file
-            os.remove(oldest_file)
+#         # Check if there are more than 12 files in the folder
+#         if len(recordings) > 12:
+#             # Sort the list of files by creation time
+#             recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
+#             # Get the oldest file
+#             oldest_file = os.path.join(output_dir, recordings[0])
+#             # Delete the oldest file
+#             os.remove(oldest_file)
         
         
-        # Define the filename format using strftime()
-        filename_format = "%Y-%m-%d_%H-%M-%S"
-        now = datetime.datetime.now().strftime(filename_format)
-        #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
-        wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
-        print("Writing to: ", wrtie_to)
-        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
+#         # Define the filename format using strftime()
+#         filename_format = "%Y-%m-%d_%H-%M-%S"
+#         now = datetime.datetime.now().strftime(filename_format)
+#         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
+#         wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
+#         print("Writing to: ", wrtie_to)
+#         writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
 
-        #Loops over and saves all the frames in a video sequence
-        while True:
+#         #Loops over and saves all the frames in a video sequence
+#         while True:
 
-            #ret is a boolean variable that returns true if the frame is available
-            #frame is an image array vector captured based on the default frames
-                #per second defined
-            #checks if frame is read correctly
-            ret, frame = cap.read() #cap.read() returns a bool T/F
-            #if the frame is read correctly, ret == 1
+#             #ret is a boolean variable that returns true if the frame is available
+#             #frame is an image array vector captured based on the default frames
+#                 #per second defined
+#             #checks if frame is read correctly
+#             ret, frame = cap.read() #cap.read() returns a bool T/F
+#             #if the frame is read correctly, ret == 1
 
-            if ret:
-#                future_time = datetime.datetime.now() #future_time refers to current time
-                #the difference of current time evaluated and previous time when last frame was processed
-                #if (future_time - curr_time).seconds <= 20*60:
-                #if (future_time - curr_time).seconds <= 60:
-                    #write frames into videoWriter object
+#             if ret:
+# #                future_time = datetime.datetime.now() #future_time refers to current time
+#                 #the difference of current time evaluated and previous time when last frame was processed
+#                 #if (future_time - curr_time).seconds <= 20*60:
+#                 #if (future_time - curr_time).seconds <= 60:
+#                     #write frames into videoWriter object
 
-                writer.write(frame)
-                #else:
-                 #   break
+#                 writer.write(frame)
+#                 #else:
+#                  #   break
 
 
 # suspect that the camera feed is linear. 
@@ -150,7 +151,7 @@ class Thread(QThread):
         recordings = os.listdir(output_dir)
 
         # Check if there are more than 12 files in the folder
-        if len(recordings) > 12:
+        if len(recordings) > 30:
             # Sort the list of files by creation time
             recordings.sort(key=lambda x: os.path.getctime(os.path.join(output_dir, x)))
             # Get the oldest file
@@ -165,8 +166,9 @@ class Thread(QThread):
         #videoWriter object used to save video captures, 20 frames per second, (framewidth,frameheight)
         wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
         print("Writing to: ", wrtie_to)
-        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 20, (int(cap.get(3)),int(cap.get(4))))
-
+        writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 12, (int(cap.get(3)),int(cap.get(4))))
+        ##Sleep to acheive 60fps
+        # time.sleep(60/1000)
        
         #Loops through frames and processes to display the video on screen
         while True:
