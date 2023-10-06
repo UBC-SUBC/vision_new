@@ -32,3 +32,6 @@ Right now the Pi needs to support 2 external i2c devices. We will use the defaul
 
 - The Bno055 IMU has internal pull up resistor, so it can connect to i2c6 on the PI (pin 15 and 16)
 - The Bar30 has to connect to the primary bus (pin3 and pin5) because it does not have internal pull up resistor.
+
+
+### New member signatures! 
