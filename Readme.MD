@@ -3,27 +3,57 @@
 This project uses the following relevant tech stack
 - Python ~3.85-3.9 (base langauge)
 - PyQt ~5.12 (UI framework)
-- Pipenv (Enviroment management)
+- Poetry (Enviroment management)
 - Openv-CV (for camera)
 
-Please checkout our Wiki as there's more detailed documentation regarding the desgin, choice, etc. Here I will just focus on descrbing how to make it just "run".
-
-
+Here are some basic steps on how to "run" the main program. 
 
 ## Setup
-
 ### Language
 First off very importantly, you will need Python installed. Install the Python version listed above for you specific system online.
 
 ### Enviroment
 Motivation: We don't want to clutter the Pi and our computer with numerous packages that might be conflicted with each other. It might seem like a good idea to have one global enviroment but things can get bad quickly. So we want to have a sandbox that isolate each project individually.
 
-Solution: As such we are going to be using the Pipenv package manager for Python to do that. You can read up more, but essentially Pipenv treats each project as its own, and it can effectively group packages with project so you can have a fresh enviroment when you start a new project.
+Solution: As such we are going to be using the Poetry package manager for Python to do that. You can read up more, but essentially Poetry treats each project as its own, and it can effectively group packages with project so you can have a fresh enviroment when you start a new project. It's a good way to manage package dependencies so that it's consistent across all machines in the development process. 
+### System Requirements
 
-#### Setup Steps
-1. Go to your terminal and make sure you have Python installed
-2. 
+* git
+* python 
+* poetry 
 
+### Installation
+
+1. Install python at https://www.python.org/downloads/ \
+   Check for installation status:
+   ```sh
+   python --version
+   ```
+2. Install poetry at https://python-poetry.org/docs/#installing-with-the-official-installer \
+   Check for installation status:
+   ```sh
+   poetry --version
+   ```
+3. Clone vision_new (repo) 
+   ```sh
+   git clone git@github.com:UBC-SUBC/vision_new.git
+   ```
+4. Navigate to master (branch) if not already set as default
+   ```sh
+   git checkout main
+   ```
+5. Navigate to main application directory 
+   ```sh
+   cd pyqt_Main
+   ```
+6. Install all dependencies with poetry 
+   ```sh
+   poetry install 
+   ```
+7. Run mainApp.py
+   ```sh
+   poetry run python mainApp.py
+   ```
 
 ### I2C externals
 
