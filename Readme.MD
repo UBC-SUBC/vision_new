@@ -65,3 +65,4 @@ Right now the Pi needs to support 2 external i2c devices. We will use the defaul
 
 
 ### New member signatures! 
+Eric was here!
