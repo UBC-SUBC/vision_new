@@ -34,30 +34,29 @@ def canny(frame):
 
 # define a video capture object
 # vid = cv2.VideoCapture("videoplayback.mp4")
-#
+  
 # while(True):
-#
+      
 #     # Capture the video frame
 #     # by frame
 #     ret, frame = vid.read()
-#
+  
 #     # Display the resulting frame
 #     cv2.imshow('frame', frame)
-#
+
 #     canny(frame)
-#
+    
 #     # the 'q' button is set as the
 #     # quitting button you may use any
 #     # desired button of your choice
 #     if cv2.waitKey(1) & 0xFF == ord('q'):
 #         break
-#
+  
 # # After the loop release the cap object
 # vid.release()
-
-src = cv2.imread("../2024_vision/edgetest.jpg", cv2.IMREAD_COLOR)
-
-canny(src)
-# Destroy all the windows
+# # Destroy all the windows
 # cv2.destroyAllWindows()
+
+src = cv2.imread("edgetest.jpg", cv2.IMREAD_COLOR)
+canny(src)
 cv2.waitKey(0)
