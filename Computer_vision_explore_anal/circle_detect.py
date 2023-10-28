@@ -80,7 +80,7 @@ class ComputerVisionModule():
 
 # The following code is commented out so that it can be used when debugging, it creates an instance of the ComputerVisionModule class 
 # and runs a single instance of the detection pipeline
-# img_processor = ComputerVisionModule(json_path='./JSON/ComputerVision.json')
-# img_processor.load_new_image(cv2.imread('./images/IMG_20220912_210543108.jpg'))
-# img_processor.find_LEDs()
-# img_processor.display_image()
+img_processor = ComputerVisionModule('./JSON/ComputerVision.json')
+img_processor.load_new_image(cv2.imread('./images/IMG_20220912_210543108.jpg'))
+img_processor.find_LEDs()
+img_processor.display_image()

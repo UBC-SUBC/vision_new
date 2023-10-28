@@ -1,6 +1,7 @@
 # import the opencv library
 import cv2
-import numpy as np  
+import numpy as np
+import cv2 as cv2
 
 def canny(frame):
     # Convert to graycsale
@@ -26,32 +27,37 @@ def canny(frame):
 
 #Experimentation: add special filters
 #Add a Laplacian Filter to enhance edge detection
-   # img_test = cv2.Laplacian(new_image,ksize=3, ddepth=cv2.CV_16S)
+    img_test = cv2.Laplacian(new_image,ksize=3, ddepth=-1)
 
     # Display Canny Edge Detection Image
-    cv2.imshow('Canny Edge Detection',new_image)
+    cv2.imshow('Canny Edge Detection',img_test)
 
 # define a video capture object
-vid = cv2.VideoCapture("videoplayback.mp4")
-  
-while(True):
-      
-    # Capture the video frame
-    # by frame
-    ret, frame = vid.read()
-  
-    # Display the resulting frame
-    cv2.imshow('frame', frame)
+# vid = cv2.VideoCapture("videoplayback.mp4")
+#
+# while(True):
+#
+#     # Capture the video frame
+#     # by frame
+#     ret, frame = vid.read()
+#
+#     # Display the resulting frame
+#     cv2.imshow('frame', frame)
+#
+#     canny(frame)
+#
+#     # the 'q' button is set as the
+#     # quitting button you may use any
+#     # desired button of your choice
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+#
+# # After the loop release the cap object
+# vid.release()
 
-    canny(frame)
-    
-    # the 'q' button is set as the
-    # quitting button you may use any
-    # desired button of your choice
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-  
-# After the loop release the cap object
-vid.release()
+src = cv2.imread("../2024_vision/edgetest.jpg", cv2.IMREAD_COLOR)
+
+canny(src)
 # Destroy all the windows
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
+cv2.waitKey(0)
