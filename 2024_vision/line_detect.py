@@ -16,10 +16,12 @@ class LineDetect:
     def detect(self, frame):
         # convert to greyscale
         img_grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        cv2.imshow('test', img_grey)
+        # apply Otsu thresholding to highlight black as white
+        ret, thresh1 = cv2.threshold(img_grey,81, 255, cv2.THRESH_BINARY_INV)
+        cv2.imshow('test', thresh1)
         cv2.waitKey(0)
 
 
-src = cv2.imread("edgetest.jpg", cv2.IMREAD_COLOR)
+src = cv2.imread("pool_test.png", cv2.IMREAD_COLOR)
 obj1 = LineDetect()
 obj1.detect(obj1, src)
