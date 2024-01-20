@@ -10,8 +10,8 @@ class ArduinoVar:
     
 class CameraVar:
     screenX =  int(1280)
-    screenY =  int(720) #camera is also recording at this res
-    screenFramrate = 30
+    screenY =  int(400) #camera is also recording at this res
+    screenFramrate = 1
     ## Sets the state of the camera’s LED via GPIO.
     led = True
     resolution = (screenX, screenY)

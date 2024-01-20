@@ -167,6 +167,8 @@ class Thread(QThread):
         wrtie_to = os.path.abspath(os.path.join(output_dir, f'test_videos_{now}.avi'))
         print("Writing to: ", wrtie_to)
         writer= cv2.VideoWriter(wrtie_to , cv2.VideoWriter_fourcc('M','J','P','G'), 12, (int(cap.get(3)),int(cap.get(4))))
+
+
         ##Sleep to acheive 60fps
         # time.sleep(60/1000)
        
@@ -181,11 +183,12 @@ class Thread(QThread):
             if ret:
                 #future_time = datetime.datetime.now()
                 #if (future_time - curr_time).seconds <= 60:
-                writer.write(frame)
+                rotated = cv2.rotate(frame,cv2.ROTATE_90_COUNTERCLOCKWISE)
+                writer.write(rotated)
                 # https://stackoverflow.com/a/55468544/6622587
 
             #*colour, image formate conversions*
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) #applies colour modification on frame (src)
+                rgbImage = cv2.cvtColor(rotated, cv2.COLOR_BGR2RGB) #applies colour modification on frame (src)
                 h, w, ch = rgbImage.shape 
                 bytesPerLine = ch * w
 
